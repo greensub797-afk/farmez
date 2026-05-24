@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://code.jquery.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; connect-src 'self' http://localhost http://127.0.0.1; img-src 'self' data: https:; font-src 'self' data: https:;">
+    <title>FarmEZ Laborer Dashboard</title>
+    
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="laborer.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Finding matches...</div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="#" class="brand">
+            <ion-icon name="leaf" style="font-size: 28px; color: var(--leaf);"></ion-icon>
+            <span class="text">FarmEZ</span>
+        </a>
+        <ul class="side-menu top">
+            <li class="active">
+                <a href="#" id="openDashboard">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="openJob">
+                    <i class='bx bxs-briefcase'></i>
+                    <span class="text">Job</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="openCheckAttendance">
+                    <i class='bx bxs-calendar-check'></i>
+                    <span class="text">Availability</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="openReports">
+                    <i class='bx bxs-report'></i>
+                    <span class="text">Reports</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="openPayments">
+                    <i class='bx bxs-credit-card'></i>
+                    <span class="text">Payments</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            
+            <!-- Top Right Navigation -->
+            <div class="top-right-nav">
+                <a href="#" class="nav-icon message-icon" id="openMessages">
+                    <ion-icon name="chatbubble"></ion-icon>
+                </a>
+                
+                <!-- Notification Dropdown -->
+                <div class="notification-dropdown">
+                    <a href="#" class="notification" id="openNotifications">
+                        <ion-icon name="notifications"></ion-icon>
+                        <span class="num">3</span>
+                    </a>
+                    <div class="dropdown-content notification-dropdown-content">
+                        <h4>Recent Activities</h4>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <span>✅ <strong>Job Completed:</strong> Rice Harvesting - Barotac</span>
+                                <small>2 hours ago</small>
+                            </div>
+                            <div class="activity-item">
+                                <span>💰 <strong>Payment Received:</strong> ₱3,500 for Corn Planting</span>
+                                <small>1 day ago</small>
+                            </div>
+                            <div class="activity-item">
+                                <span>⭐ <strong>Rating Received:</strong> 5 stars from Farm Manager</span>
+                                <small>2 days ago</small>
+                            </div>
+                            <div class="activity-item">
+                                <span>📊 <strong>Performance Bonus:</strong> ₱500 for excellent work</span>
+                                <small>3 days ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-dropdown">
+                    <a href="#" class="profile" id="openUserProfile">
+                        <img src="https://ui-avatars.com/api/?name=Juan+Laborer&background=1b7b44&color=fff" alt="Profile">
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#" id="openMyProfile"><ion-icon name="person"></ion-icon> My Profile</a>
+                        <a href="#" id="logoutBtn"><ion-icon name="log-out"></ion-icon> Log-out</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+            <!-- Dashboard View -->
+            <div class="dashboard-view" id="dashboardView">
+                <div class="head-title">
+                    <div class="left">
+                        <h1>FarmEZ Laborer</h1>
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#">Dashboard</a>
+                            </li>
+                            <li><i class='bx bx-chevron-right'></i></li>
+                            <li>
+                                <a class="active" href="#">Overview</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Dashboard Sections Container -->
+                <div class="dashboard-container">
+                    <!-- Overview Metrics Section -->
+                    <section class="dashboard-section overview-metrics">
+                        <div class="board">
+                            <h2>Overview Metrics</h2>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <h3>Total Jobs Completed</h3>
+                                    <p class="value">156</p>
+                                    <p>Lifetime total</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h3>Current Job Count</h3>
+                                    <p class="value">3</p>
+                                    <p>Active assignments</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h3>Overall Rating</h3>
+                                    <p class="value">4.8</p>
+                                    <p>Out of 5.0</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h3>Completion Rate</h3>
+                                    <p class="value">98%</p>
+                                    <p>On-time completion</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Job History Table -->
+                    <section class="dashboard-section job-history">
+                        <div class="board">
+                            <div class="section-label">Recent Jobs</div>
+                            <div class="section-header">
+                                <h2 class="section-title">Recent Job History</h2>
+                                <div class="filter-controls">
+                                    <button class="filter-btn active" data-filter="all">All</button>
+                                    <button class="filter-btn" data-filter="month">This Month</button>
+                                    <button class="filter-btn" data-filter="week">This Week</button>
+                                </div>
+                            </div>
+                            
+                            <div class="data-table-container">
+                                <table id="jobHistoryTable" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Farm Location</th>
+                                            <th>Job Type</th>
+                                            <th>Duration</th>
+                                            <th>Earnings</th>
+                                            <th>Rating</th>
+                                            <th>Status</th>
+                                            <th>Date Completed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Performance Analytics -->
+                    <section class="dashboard-section performance-analytics">
+                        <div class="board">
+                            <div class="section-label">Performance Analytics</div>
+                            <div class="section-header">
+                                <h2 class="section-title">Performance Summary</h2>
+                                <div class="filter-controls">
+                                    <button class="filter-btn active" data-filter="all">All Time</button>
+                                    <button class="filter-btn" data-filter="month">This Month</button>
+                                    <button class="filter-btn" data-filter="quarter">This Quarter</button>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <canvas id="performanceChart"></canvas>
+                            </div>
+                            
+                            <div class="data-table-container">
+                                <table id="performanceTable" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Job Type</th>
+                                            <th>Jobs Completed</th>
+                                            <th>Success Rate</th>
+                                            <th>Avg Rating</th>
+                                            <th>Total Earnings</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Finance Chart Section -->
+                    <section class="dashboard-section finance-chart">
+                        <div class="board">
+                            <div class="section-label">Financial Overview</div>
+                            <div class="section-header">
+                                <h2 class="section-title">Earnings & Payments</h2>
+                                <div class="filter-controls">
+                                    <button class="filter-btn active" data-filter="monthly">Monthly</button>
+                                    <button class="filter-btn" data-filter="quarterly">Quarterly</button>
+                                    <button class="filter-btn" data-filter="yearly">Yearly</button>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <canvas id="financeChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Job View (Hidden by default) -->
+            <div class="job-view" id="jobView" style="display: none;">
+                <div class="head-title">
+                    <div class="left">
+                        <h1>Job Management</h1>
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#" id="backToDashboard">Dashboard</a>
+                            </li>
+                            <li><i class='bx bx-chevron-right'></i></li>
+                            <li>
+                                <a class="active" href="#">Job Management</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Job Sections Container -->
+                <div class="job-container">
+                    <!-- Job Section -->
+                    <section class="job-section" id="openJobsBoard">
+                        <div class="board">
+                            <h2>Job Management</h2>
+
+                            <div class="jobs-grid">
+                                <!-- BOX 1: VIEW JOBS CARD -->
+                                <article class="job-card" data-job-id="view-jobs">
+                                    <div class="card-icon">
+                                        <i class='bx bxs-briefcase'></i>
+                                    </div>
+                                    <h3>View Jobs</h3>
+                                    <div class="primary-row">
+                                        <button class="btn-primary" id="btnViewJobs">View Available Jobs</button>
+                                    </div>
+                                </article>
+
+                                <!-- BOX 2: MY JOB APPLICATIONS CARD -->
+                                <article class="job-card" data-job-id="my-applications">
+                                    <div class="card-icon">
+                                        <i class='bx bxs-file'></i>
+                                    </div>
+                                    <h3>My Job Applications</h3>
+                                    <div class="primary-row">
+                                        <button class="btn-primary" id="btnMyApplications">View Applications</button>
+                                    </div>
+                                </article>
+
+                                <!-- BOX 3: AVAILABLE JOBS CARD -->
+                                <article class="job-card" data-job-id="available-jobs">
+                                    <div class="card-icon">
+                                        <i class='bx bxs-check-shield'></i>
+                                    </div>
+                                    <h3>Available Jobs</h3>
+                                    <div class="primary-row">
+                                        <button class="btn-primary" id="btnAvailableJobs">Browse Jobs</button>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Current Jobs Section -->
+                    <section class="dashboard-section current-jobs">
+                        <div class="board">
+                            <div class="section-label">Current Assignments</div>
+                            <div class="section-header">
+                                <h2 class="section-title">My Current Jobs</h2>
+                                <div class="filter-controls">
+                                    <button class="filter-btn active" data-filter="all">All Jobs</button>
+                                    <button class="filter-btn" data-filter="active">Active</button>
+                                    <button class="filter-btn" data-filter="pending">Pending</button>
+                                </div>
+                            </div>
+                            
+                            <div class="data-table-container">
+                                <table id="currentJobsTable" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Job Title</th>
+                                            <th>Farm Location</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Rate</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Check Attendance View -->
+            <div class="attendance-view" id="checkAttendanceView" style="display: none;">
+                <div class="head-title">
+                    <div class="left">
+                        <h1>Check Attendance</h1>
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#" id="backToDashboardFromCheckAttendance">Dashboard</a>
+                            </li>
+                            <li><i class='bx bx-chevron-right'></i></li>
+                            <li>
+                                <a class="active" href="#">Check Attendance</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="attendance-actions">
+                        <button class="btn-primary" id="markMyAttendance">Mark My Attendance</button>
+                        <button class="btn-ghost" id="downloadAttendance">Download Record</button>
+                    </div>
+                </div>
+
+                <div class="attendance-container">
+                    <div class="board">
+                        <div class="section-label">My Attendance</div>
+                        <div class="attendance-summary">
+                            <div class="attendance-stats">
+                                <div class="stat-card present">
+                                    <h3>Present Days</h3>
+                                    <p class="value" id="presentCount">22</p>
+                                </div>
+                                <div class="stat-card absent">
+                                    <h3>Absent Days</h3>
+                                    <p class="value" id="absentCount">1</p>
+                                </div>
+                                <div class="stat-card late">
+                                    <h3>Late Days</h3>
+                                    <p class="value" id="lateCount">2</p>
+                                </div>
+                                <div class="stat-card total">
+                                    <h3>Work Days</h3>
+                                    <p class="value" id="totalWorkDays">25</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="data-table-container">
+                            <table id="myAttendanceTable" class="display" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Job</th>
+                                        <th>Check-in Time</th>
+                                        <th>Check-out Time</th>
+                                        <th>Status</th>
+                                        <th>Hours Worked</th>
+                                        <th>Daily Earnings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports View -->
+            <div class="reports-view" id="reportsView" style="display: none;">
+                <div class="head-title">
+                    <div class="left">
+                        <h1>Reports</h1>
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#" id="backToDashboardFromReports">Dashboard</a>
+                            </li>
+                            <li><i class='bx bx-chevron-right'></i></li>
+                            <li>
+                                <a class="active" href="#">Reports</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="reports-actions">
+                        <button class="btn-primary" id="generateReport">Generate Report</button>
+                        <button class="btn-ghost" id="exportReport">Export Report</button>
+                    </div>
+                </div>
+
+                <div class="reports-container">
+                    <div class="board">
+                        <div class="section-label">Performance Reports</div>
+                        
+                        <div class="reports-grid">
+                            <!-- Monthly Performance Report -->
+                            <div class="report-card">
+                                <div class="report-icon">
+                                    <i class='bx bxs-bar-chart-alt-2'></i>
+                                </div>
+                                <h3>Monthly Performance Report</h3>
+                                <p>Detailed analysis of your monthly performance, ratings, and completion rates.</p>
+                                <button class="btn-primary small-btn">View Report</button>
+                            </div>
+                            
+                            <!-- Earnings Summary -->
+                            <div class="report-card">
+                                <div class="report-icon">
+                                    <i class='bx bxs-wallet'></i>
+                                </div>
+                                <h3>Earnings Summary</h3>
+                                <p>Complete breakdown of your earnings, bonuses, and deductions for the current period.</p>
+                                <button class="btn-primary small-btn">View Report</button>
+                            </div>
+                            
+                            <!-- Attendance Summary -->
+                            <div class="report-card">
+                                <div class="report-icon">
+                                    <i class='bx bxs-calendar'></i>
+                                </div>
+                                <h3>Attendance Summary</h3>
+                                <p>Comprehensive attendance record with present, absent, and late days analysis.</p>
+                                <button class="btn-primary small-btn">View Report</button>
+                            </div>
+                            
+                            <!-- Job Completion Report -->
+                            <div class="report-card">
+                                <div class="report-icon">
+                                    <i class='bx bxs-check-circle'></i>
+                                </div>
+                                <h3>Job Completion Report</h3>
+                                <p>Analysis of jobs completed, success rates, and client feedback.</p>
+                                <button class="btn-primary small-btn">View Report</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Reports Table -->
+                        <div class="section-header" style="margin-top: 40px;">
+                            <h2 class="section-title">Recent Reports</h2>
+                        </div>
+                        
+                        <div class="data-table-container">
+                            <table id="reportsTable" class="display" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Report Type</th>
+                                        <th>Period</th>
+                                        <th>Generated Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments View -->
+            <div class="payments-view" id="paymentsView" style="display: none;">
+                <div class="head-title">
+                    <div class="left">
+                        <h1>Payments</h1>
+                        <ul class="breadcrumb">
+                            <li>
+                                <a href="#" id="backToDashboardFromPayments">Dashboard</a>
+                            </li>
+                            <li><i class='bx bx-chevron-right'></i></li>
+                            <li>
+                                <a class="active" href="#">Payments</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="payments-actions">
+                        <button class="btn-primary" id="requestPayment">Request Payment</button>
+                        <button class="btn-ghost" id="viewPaymentHistory">Payment History</button>
+                    </div>
+                </div>
+
+                <div class="payments-container">
+                    <div class="board">
+                        <div class="section-label">Payment Summary</div>
+                        
+                        <div class="payment-summary">
+                            <div class="payment-stats">
+                                <div class="stat-card">
+                                    <h3>Total Earned</h3>
+                                    <p class="value">₱48,500</p>
+                                    <small>This month</small>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Pending Payments</h3>
+                                    <p class="value">₱12,300</p>
+                                    <small>To be received</small>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Last Payment</h3>
+                                    <p class="value">₱15,200</p>
+                                    <small>5 days ago</small>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Next Payment</h3>
+                                    <p class="value">₱8,500</p>
+                                    <small>Expected in 3 days</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-header">
+                            <h2 class="section-title">Recent Payments</h2>
+                            <div class="filter-controls">
+                                <button class="filter-btn active" data-filter="all">All</button>
+                                <button class="filter-btn" data-filter="received">Received</button>
+                                <button class="filter-btn" data-filter="pending">Pending</button>
+                            </div>
+                        </div>
+                        
+                        <div class="data-table-container">
+                            <table id="paymentsTable" class="display" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Payment ID</th>
+                                        <th>Job Description</th>
+                                        <th>Amount</th>
+                                        <th>Payment Date</th>
+                                        <th>Status</th>
+                                        <th>Payment Method</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+
+    <!-- ================= MODALS ================= -->
+
+    <!-- View Jobs Modal -->
+    <div class="modal-backdrop" id="modalViewJobs" aria-hidden="true">
+        <div class="modal">
+            <div class="modal-close" id="closeViewJobs">✕</div>
+            <h3>Available Jobs</h3>
+            <div id="jobsContainer">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- My Applications Modal -->
+    <div class="modal-backdrop" id="modalMyApplications" aria-hidden="true">
+        <div class="modal">
+            <div class="modal-close" id="closeMyApplications">✕</div>
+            <h3>My Job Applications</h3>
+            <div id="applicationsContainer">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Jobs Modal -->
+    <div class="modal-backdrop" id="modalAvailableJobs" aria-hidden="true">
+        <div class="modal available-jobs-modal">
+            <div class="modal-close" id="closeAvailableJobs">✕</div>
+            <h3>Browse Available Jobs</h3>
+            <div id="availableJobsContainer">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Mark My Attendance Modal -->
+    <div class="modal-backdrop" id="modalMarkMyAttendance" aria-hidden="true">
+        <div class="modal">
+            <div class="modal-close" id="closeMarkMyAttendance">✕</div>
+            <h3>Mark My Attendance</h3>
+            
+            <div class="field">
+                <label>Select Job</label>
+                <select id="myAttendanceJob" class="select-dropdown">
+                    <!-- Will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <div class="field">
+                <label>Status</label>
+                <select id="myAttendanceStatus" class="select-dropdown">
+                    <option value="present">Present</option>
+                    <option value="late">Late Arrival</option>
+                    <option value="leave">On Leave</option>
+                </select>
+            </div>
+            
+            <div class="field-row">
+                <div class="field half">
+                    <label>Check-in Time</label>
+                    <input type="time" id="myCheckInTime" value="08:00">
+                </div>
+                <div class="field half">
+                    <label>Check-out Time</label>
+                    <input type="time" id="myCheckOutTime" value="17:00">
+                </div>
+            </div>
+            
+            <div class="field">
+                <label>Date</label>
+                <input type="date" id="myAttendanceDate" value="">
+            </div>
+            
+            <div class="field">
+                <label>Notes (Optional)</label>
+                <textarea id="myAttendanceNotes" rows="3" placeholder="Any additional notes..."></textarea>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-ghost" id="cancelMyAttendance">Cancel</button>
+                <button class="btn-primary" id="saveMyAttendance">Save Attendance</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Laborer Profile Modal -->
+    <div class="modal-backdrop" id="modalProfile" aria-hidden="true">
+        <div class="modal">
+            <div class="modal-close" id="closeProfile">✕</div>
+            <h3>Laborer Profile</h3>
+            
+            <div class="profile-section">
+                <div class="profile-header">
+                    <div class="profile-picture-placeholder">
+                        <ion-icon name="person-circle" style="font-size: 80px; color: var(--sage);"></ion-icon>
+                    </div>
+                    <button class="btn-ghost small-btn" id="changePhotoBtn">
+                        <ion-icon name="camera" style="margin-right: 5px;"></ion-icon>
+                        Change Photo
+                    </button>
+                </div>
+                
+                <div class="profile-form">
+                    <div class="field">
+                        <label>First Name</label>
+                        <div class="editable-field">
+                            <input type="text" placeholder="Juan" value="Juan" id="firstName" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="firstName">✏️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Middle Name</label>
+                        <div class="editable-field">
+                            <input type="text" placeholder="Santos" value="Santos" id="middleName" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="middleName">✏️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Last Name</label>
+                        <div class="editable-field">
+                            <input type="text" placeholder="Dela Cruz" value="Dela Cruz" id="lastName" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="lastName">✏️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Username</label>
+                        <div class="editable-field">
+                            <input type="text" placeholder="juan.laborer" value="juan.laborer" id="username" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="username">✏️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Password</label>
+                        <div class="editable-field password-field">
+                            <input type="password" placeholder="••••••••" value="password123" id="password" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="password">✏️</button>
+                            <button class="toggle-password" type="button">
+                                <ion-icon name="eye"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Contact Number</label>
+                        <div class="editable-field">
+                            <input type="tel" placeholder="+63 912 345 6789" value="+63 912 345 6789" id="contactNumber" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="contactNumber">✏️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Email Address</label>
+                        <div class="editable-field email-field">
+                            <input type="email" placeholder="juan@example.com" value="juan@example.com" id="emailAddress" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="emailAddress">✏️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Address</label>
+                        <div class="editable-field">
+                            <input type="text" placeholder="123 Farm Street, Bacolod City" value="123 Farm Street, Bacolod City" id="address" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="address">✏️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Primary Skills</label>
+                        <div class="skills-display" id="profileSkills">
+                            <!-- Skills will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <label>Hourly Rate (₱)</label>
+                        <div class="editable-field">
+                            <input type="number" placeholder="150" value="180" id="hourlyRate" disabled>
+                            <button class="pencil-icon edit-field-btn" data-field="hourlyRate">✏️</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-primary" id="saveProfileBtn" style="display:none;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Request Modal -->
+    <div class="modal-backdrop" id="modalRequestPayment" aria-hidden="true">
+        <div class="modal">
+            <div class="modal-close" id="closeRequestPayment">✕</div>
+            <h3>Request Payment</h3>
+            
+            <div class="field">
+                <label>Select Job for Payment</label>
+                <select id="paymentJob" class="select-dropdown">
+                    <!-- Will be populated by JavaScript -->
+                </select>
+            </div>
+            
+            <div class="field">
+                <label>Payment Amount (₱)</label>
+                <input type="number" id="paymentAmount" placeholder="Enter amount">
+            </div>
+            
+            <div class="field">
+                <label>Payment Method</label>
+                <select id="paymentMethod" class="select-dropdown">
+                    <option value="bank">Bank Transfer</option>
+                    <option value="gcash">GCash</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="cash">Cash</option>
+                </select>
+            </div>
+            
+            <div class="field">
+                <label>Payment Details</label>
+                <textarea id="paymentDetails" rows="3" placeholder="Provide payment details..."></textarea>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-ghost" id="cancelPaymentRequest">Cancel</button>
+                <button class="btn-primary" id="submitPaymentRequest">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="laborer.js"></script>
+</body>
+</html>

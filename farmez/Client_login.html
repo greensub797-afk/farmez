@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; connect-src 'self' http://localhost http://127.0.0.1; img-src 'self' data: https:; font-src 'self' data: https: https://fonts.gstatic.com;">
+    <title>FarmEZ | Client Login</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #eaf7e6 0%, #d4e8d8 100%);
+            color: #1a2a3a;
+            line-height: 1.4;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Background farmer photo overlay */
+        .farmer-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            filter: brightness(0.35) contrast(1.1);
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30, 60, 40, 0.8), rgba(20, 45, 30, 0.85));
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header with logo */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #c8e6b5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: white;
+            border-radius: 28px;
+            padding: 28px 32px 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1C3A2B;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .login-sub {
+            text-align: center;
+            color: #5a7f6a;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: #2a4a38;
+            margin-bottom: 6px;
+        }
+
+        label i {
+            margin-right: 6px;
+            color: #1f7b3e;
+            width: 18px;
+            font-size: 12px;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px 16px;
+            border: 1.5px solid #e2ede5;
+            border-radius: 24px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            background: #fefef7;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1f7b3e;
+            box-shadow: 0 0 0 3px rgba(31, 123, 62, 0.1);
+        }
+
+        input::placeholder {
+            color: #b8cfc3;
+            font-weight: 400;
+            font-size: 13px;
+        }
+
+        /* Forgot Password & Remember */
+        .options-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .checkbox-group input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #1f7b3e;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 500;
+            font-size: 12px;
+            color: #3a5e4a;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #1f7b3e;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            background: #1f7b3e;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 15px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 22px;
+        }
+
+        .login-btn:hover {
+            background: #0f6733;
+            transform: scale(1.01);
+        }
+
+        /* Create Account Link */
+        .create-account {
+            text-align: center;
+            padding-top: 18px;
+            border-top: 1px solid #e8f0e4;
+        }
+
+        .create-account p {
+            color: #5a7f6a;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .create-link {
+            color: #1f7b3e;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .create-link:hover {
+            gap: 10px;
+            color: #0f6733;
+        }
+
+        /* Security Footer */
+        .security-footer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e8f0e4;
+            font-size: 11px;
+            color: #8aa79a;
+        }
+
+        .security-footer span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .security-footer i {
+            color: #1f7b3e;
+            font-size: 11px;
+        }
+
+        /* Error Message */
+        .error-msg {
+            color: #d9534f;
+            font-size: 11px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f7b3e;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            z-index: 1100;
+            font-size: 13px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .toast-notification.error {
+            background-color: #d9534f;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 16px 20px;
+            }
+            .login-card {
+                padding: 22px 24px 26px;
+            }
+            .login-title {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-height: 650px) {
+            .login-card {
+                padding: 20px 28px 24px;
+            }
+            .form-group {
+                margin-bottom: 14px;
+            }
+            .options-row {
+                margin-bottom: 16px;
+            }
+            .login-btn {
+                margin-bottom: 16px;
+                padding: 10px;
+            }
+            .security-footer {
+                margin-top: 14px;
+                padding-top: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Farmer background photo -->
+<img class="farmer-bg" src="https://images.pexels.com/photos/162239/farmer-man-person-people-162239.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Farmer working in field" onerror="this.src='https://images.pexels.com/photos/1444949/farmer-agriculture-field-rice-1444949.jpeg?auto=compress&cs=tinysrgb&w=1600'">
+<div class="bg-overlay"></div>
+
+<div class="container">
+    <div class="header">
+        <div class="logo">Farm<span style="color: #c8e6b5;">EZ</span></div>
+    </div>
+
+    <!-- Client Login Card -->
+    <div class="login-card">
+        <div class="login-title">Secure Login</div>
+        <div class="login-sub">Manage your workforce with precision</div>
+
+        <form id="loginForm">
+            <!-- Email -->
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Client Email</label>
+                <input type="email" id="clientEmail" placeholder="name@company.com">
+                <div class="error-msg" id="emailError">Please enter a valid email address</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="clientPassword" placeholder="Enter your password">
+                <div class="error-msg" id="passwordError">Please enter your password</div>
+            </div>
+
+            <!-- Options Row -->
+            <div class="options-row">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="rememberSession">
+                    <label for="rememberSession">Remember this session</label>
+                </div>
+                <a href="#" class="forgot-link" id="forgotPasswordLink">Forgot Password?</a>
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" class="login-btn" id="loginBtn">
+                SIGN IN TO PORTAL <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <!-- Create Account Link -->
+        <div class="create-account">
+            <p>New to FarmEZ?</p>
+            <a href="javascript:void(0)" id="createAccountLink" class="create-link">
+                Create Client Account <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DOM Elements
+    const clientEmail = document.getElementById('clientEmail');
+    const clientPassword = document.getElementById('clientPassword');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginForm = document.getElementById('loginForm');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const rememberSession = document.getElementById('rememberSession');
+    const createAccountLink = document.getElementById('createAccountLink');
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+
+    // Show toast notification
+    function showToast(message, isError = false) {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) existingToast.remove();
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        if (isError) toast.classList.add('error');
+        toast.innerHTML = isError ? `<i class="fas fa-exclamation-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Hide errors
+    function hideErrors() {
+        emailError.classList.remove('show');
+        passwordError.classList.remove('show');
+    }
+
+    // Validate login form
+    function validateLogin() {
+        let isValid = true;
+        hideErrors();
+
+        const email = clientEmail.value.trim();
+        const emailPattern = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+        if (!email || !emailPattern.test(email)) {
+            emailError.classList.add('show');
+            isValid = false;
+        }
+
+        const password = clientPassword.value;
+        if (!password) {
+            passwordError.classList.add('show');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    // Login submission - redirects to Client_Dashboard.html
+    loginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        if (validateLogin()) {
+            const email = clientEmail.value.trim();
+            const password = clientPassword.value;
+            
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Verifying...';
+            loginBtn.disabled = true;
+
+            fetch('api/login.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    role: 'client'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'success' && data.user.role === 'client') {
+                    localStorage.setItem('farmez_logged_in', 'true');
+                    localStorage.setItem('farmez_user_role', 'client');
+                    localStorage.setItem('farmez_user', JSON.stringify(data.user));
+                    
+                    showToast('Login successful! Redirecting to dashboard...');
+                    setTimeout(() => {
+                        window.location.href = 'Client_Dashboard.html';
+                    }, 1000);
+                } else {
+                    showToast(data.message || 'Invalid email or password.', true);
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = 'SIGN IN TO PORTAL <i class="fas fa-arrow-right"></i>';
+                }
+            })
+            .catch(error => {
+                showToast('Database connection failed. Please try again.', true);
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'SIGN IN TO PORTAL <i class="fas fa-arrow-right"></i>';
+            });
+        }
+    });
+
+    // Create Account Link - redirects to Client_Registration.html
+    createAccountLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'Client_Registration.html';
+    });
+
+    // Forgot Password handler
+    forgotPasswordLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('Password reset link will be sent to your registered email.', false);
+    });
+
+    // Enter key submission
+    clientEmail.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            loginBtn.click();
+        }
+    });
+    
+    clientPassword.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            loginBtn.click();
+        }
+    });
+
+    // Real-time validation cleanup
+    clientEmail.addEventListener('input', () => emailError.classList.remove('show'));
+    clientPassword.addEventListener('input', () => passwordError.classList.remove('show'));
+</script>
+</body>
+</html>

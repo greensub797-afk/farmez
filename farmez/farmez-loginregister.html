@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://code.jquery.com; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost http://127.0.0.1; img-src 'self' data: https://img.icons8.com https://images.unsplash.com; font-src 'self' data:;">
+  <title>FarmEZ Login</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="farmezlogin-register.css">
+</head>
+<body>
+  
+<div class="background-slideshow">
+    <div class="gif-slide"></div>
+    <div class="gif-slide"></div>
+    <div class="gif-slide"></div>
+</div>
+
+<!-- Alert Overlay -->
+<div class="alert-overlay" id="alertOverlay">
+    <div class="alert-box" id="alertBox">
+        <div class="alert-icon" id="alertIcon">⚠️</div>
+        <h3 class="alert-title" id="alertTitle">Alert</h3>
+        <p class="alert-message" id="alertMessage">Message goes here</p>
+        <button class="alert-button" id="alertButton">OK</button>
+    </div>
+</div>
+
+<div class="top-nav">
+  <div class="brand">
+    <img src="https://img.icons8.com/?size=40&id=61004&format=png&color=0f4b2b" width="32" height="32" alt="Tractor">
+    <span>FarmEZ</span>
+  </div>
+  <a href="index.php">← Back to Home</a>
+</div>
+
+<div class="shell">
+  <!-- LEFT PANEL -->
+  <section class="panel panel-left">
+    <div class="brand">
+      <img src="https://img.icons8.com/?size=48&id=61004&format=png&color=ffffff" width="44" height="44" alt="FarmEZ Logo">
+      <span>FarmEZ</span>
+    </div>
+
+    <h1>Hire farmers faster.</h1>
+    <p>Field crews, tractor operators, agronomists—log in to coordinate jobs, review payouts, and sync crews even when offline.</p>
+
+    <ul class="feature-list">
+      <li>Verified farmer marketplace</li>
+      <li>Smart scheduling with route guidance</li>
+      <li>Instant chat & compliance tracking</li>
+    </ul>
+
+    <div class="stats">
+      <div class="stat-pill"><strong>4,380</strong><span>active farmers</span></div>
+      <div class="stat-pill"><strong>96%</strong><span>job fill rate</span></div>
+    </div>
+  </section>
+
+  <!-- RIGHT PANEL -->
+  <section class="panel panel-right">
+    <div class="container" id="container">
+      <!-- SIGN IN -->
+      <div class="form-container sign-in">
+        <form class="login-card" id="loginForm" method="POST" action="">
+          <h2>Login</h2>
+
+          <div>
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter your username" required>
+          </div>
+
+          <div>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+          </div>
+
+          <button type="submit" name="login">Sign in to FarmEZ</button>
+
+          <p class="support-text">
+            Need an account?
+            <a id="toggle-signup-link" class="support-link" href="#">Sign up</a>
+          </p>
+        </form>
+      </div>
+
+      <!-- SIGN UP -->
+      <div class="form-container sign-up">
+        <form class="login-card" id="registerForm" method="POST" action="">
+          <h2>Registration</h2>
+
+          <div>
+            <label>First Name</label>
+            <input type="text" name="first_name" placeholder="First name" required>
+          </div>
+
+          <div>
+            <label>Last Name</label>
+            <input type="text" name="last_name" placeholder="Last name" required>
+          </div>
+
+          <div>
+            <label>Middle Initial</label>
+            <input type="text" name="middle_initial" maxlength="1" placeholder="M.I." required>
+          </div>
+
+          <div>
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Choose a username" required>
+          </div>
+
+          <div>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create a password" required>
+          </div>
+
+          <div>
+            <label>Email</label>
+            <input type="email" name="email" placeholder="your@email.com" required>
+          </div>
+
+          <div>
+            <label>Phone Number</label>
+            <input type="tel" name="phone" placeholder="+1 234 567 8900" required>
+          </div>
+
+          <button type="submit" name="register">Sign Up</button>
+          
+          <p class="account-text">
+            Already have an account?
+            <a href="#" id="signInLink">Sign in</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="farmezlogin-register.js"></script>
+</body>
+</html>

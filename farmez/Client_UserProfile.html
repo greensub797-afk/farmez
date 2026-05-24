@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; connect-src 'self' http://localhost http://127.0.0.1; img-src 'self' data: https:; font-src 'self' data: https: https://fonts.gstatic.com;">
+    <title>FarmEZ | User Profile</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fb;
+            color: #1a2a3a;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1a472a 0%, #0d2e1c 100%);
+            padding: 28px 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #c8e6b5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background: rgba(200, 230, 181, 0.15);
+            color: white;
+        }
+
+        .nav-menu a i {
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 28px 36px;
+        }
+
+        /* Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1C3A2B;
+        }
+
+        .page-title p {
+            color: #5a7f6a;
+            font-size: 13px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #2c6e2f, #1e8840);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Profile Grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 28px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8f0e4;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8f0e4;
+        }
+
+        .card-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1C3A2B;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1C3A2B;
+        }
+
+        /* User Profile Card */
+        .user-profile-card {
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #2c6e2f, #1e8840);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1C3A2B;
+            margin-bottom: 4px;
+        }
+
+        .user-title {
+            color: #5a7f6a;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .active-badge {
+            display: inline-block;
+            background: #e1f7e8;
+            color: #1c6e3b;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .org-details {
+            background: #f5fbf2;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: left;
+            margin-top: 16px;
+        }
+
+        .org-details p {
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #2a4a38;
+        }
+
+        .org-details i {
+            width: 24px;
+            color: #1f7b3e;
+        }
+
+        /* Personal Info */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f4f1;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2a4a38;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #1a2a3a;
+            font-size: 14px;
+        }
+
+        .security-badge {
+            background: #e1f7e8;
+            color: #1c6e3b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* Verified Tier */
+        .tier-card {
+            background: linear-gradient(135deg, #1a472a, #0d2e1c);
+            color: white;
+            margin-top: 28px;
+        }
+
+        .tier-card p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .tier-level {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tier-badge {
+            background: rgba(200, 230, 181, 0.2);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .renewal-date {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Connected Services */
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f4f1;
+        }
+
+        .service-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .service-info p {
+            font-size: 12px;
+            color: #8aa79a;
+        }
+
+        .service-status {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: #e1f7e8;
+            color: #1c6e3b;
+        }
+
+        .service-status.pending {
+            background: #fff0db;
+            color: #c97e2a;
+        }
+
+        .link-btn {
+            background: transparent;
+            border: 1px solid #1f7b3e;
+            padding: 6px 16px;
+            border-radius: 20px;
+            color: #1f7b3e;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .link-btn:hover {
+            background: #1f7b3e;
+            color: white;
+        }
+
+        /* Activity Log */
+        .activity-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f4f1;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            background: #e8f5e5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .activity-icon i {
+            color: #1f7b3e;
+            font-size: 16px;
+        }
+
+        .activity-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .activity-details p {
+            font-size: 12px;
+            color: #8aa79a;
+        }
+
+        .view-all {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .view-all a {
+            color: #1f7b3e;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Button Row */
+        .button-row {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 0;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #1f7b3e;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: #1f7b3e;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #1f7b3e;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-outline:hover, .btn-primary:hover {
+            transform: scale(1.02);
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            margin-top: 32px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px solid #e2ede5;
+        }
+
+        @media (max-width: 1000px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .sidebar {
+                width: 80px;
+                padding: 20px 12px;
+            }
+            .sidebar .logo, .sidebar .nav-menu a span {
+                display: none;
+            }
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .button-row {
+                flex-direction: column;
+            }
+            .top-header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            .tier-level {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">FarmEZ</div>
+        <ul class="nav-menu">
+            <li><a href="Client_Dashboard.html"><i class="fas fa-chart-line"></i><span>Dashboard</span></a></li>
+            <li><a href="#" id="contractsLink"><i class="fas fa-file-contract"></i><span>Contracts</span></a></li>
+            <li><a href="Client_UserProfile.html" class="active"><i class="fas fa-user"></i><span>User Profile</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="top-header">
+            <div class="page-title">
+                <h1>User Profile</h1>
+                <p>Manage your organization's identity and account preferences.</p>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-bell" style="color: #8aa79a; cursor: pointer;" id="notificationBell"></i>
+                <div class="avatar" id="userAvatar">JC</div>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <!-- Left Column -->
+            <div>
+                <!-- User Profile Card -->
+                <div class="card user-profile-card">
+                    <div class="profile-avatar" id="profileAvatar">JC</div>
+                    <h2 class="user-name" id="userName">Jameson Carter</h2>
+                    <p class="user-title">Principal Operations Manager</p>
+                    <span class="active-badge"><i class="fas fa-check-circle"></i> Active Account</span>
+                    
+                    <div class="org-details">
+                        <p><i class="fas fa-building"></i> <strong>Organization:</strong> <span id="orgName">Evergreen Valley Farm</span></p>
+                        <p><i class="fas fa-calendar-alt"></i> <strong>Member Since:</strong> <span id="memberSince">March 12, 2021</span></p>
+                        <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> <span id="location">Napa Valley, CA</span></p>
+                    </div>
+                </div>
+
+                <!-- Verified Organization Tier -->
+                <div class="card tier-card">
+                    <h3 style="color: white; margin-bottom: 12px;">Verified Organization Tier</h3>
+                    <p>Your account has been verified through the Federal Agricultural Workforce Certification program. You are authorized for multi-state contract management.</p>
+                    <div class="tier-level">
+                        <span class="tier-badge"><i class="fas fa-crown"></i> LEVEL 3 • PLATINUM</span>
+                        <span class="renewal-date">Renewal date: Oct 2024</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <!-- Personal Information Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Personal Information</h2>
+                        <div class="button-row" style="margin-top: 0;">
+                            <button class="btn-outline" id="exportBtn"><i class="fas fa-download"></i> Export Profile</button>
+                            <button class="btn-primary" id="editProfileBtn"><i class="fas fa-edit"></i> Edit Profile</button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-user"></i> Full Legal Name</span>
+                        <span class="info-value" id="fullName">Jameson Carter-Sloan</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-envelope"></i> Email Address</span>
+                        <span class="info-value" id="email">j.carter@evergreenvalley.com</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-phone-alt"></i> Work Phone</span>
+                        <span class="info-value" id="phone">+1 (555) 342-9012</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label"><i class="fas fa-shield-alt"></i> Account Security</span>
+                        <span class="security-badge"><i class="fas fa-check"></i> Two-Factor Enabled</span>
+                    </div>
+                </div>
+
+                <!-- Connected Services -->
+                <div class="card" style="margin-top: 28px;">
+                    <div class="card-header">
+                        <h3>Connected Services</h3>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>AgriCloud Sync</h4>
+                            <p>Real-time data synchronization</p>
+                        </div>
+                        <span class="service-status"><i class="fas fa-check-circle"></i> Connected</span>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>FarmPay Portal</h4>
+                            <p>Automated payroll distribution</p>
+                        </div>
+                        <span class="service-status"><i class="fas fa-check-circle"></i> Connected</span>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>SupplyLink ERP</h4>
+                            <p>Inventory and equipment logs</p>
+                        </div>
+                        <button class="link-btn" id="linkSupplyBtn"><i class="fas fa-link"></i> Link Account</button>
+                    </div>
+                </div>
+
+                <!-- Activity Log -->
+                <div class="card" style="margin-top: 28px;">
+                    <div class="card-header">
+                        <h3>Activity Log</h3>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-file-signature"></i></div>
+                        <div class="activity-details">
+                            <h4>Contract Approved: #H2A-2023-994</h4>
+                            <p>2 hours ago • Workforce Management Module</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="activity-details">
+                            <h4>Profile Update: Security Settings</h4>
+                            <p>Yesterday at 4:32 PM • Core Account</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <div class="activity-details">
+                            <h4>Login Detected: New Device (Mobile)</h4>
+                            <p>Sept 18, 2023 at 08:14 AM • Security</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon"><i class="fas fa-database"></i></div>
+                        <div class="activity-details">
+                            <h4>Bulk Worker Data Import (CSV)</h4>
+                            <p>Sept 16, 2023 at 11:45 PM • Data Utilities</p>
+                        </div>
+                    </div>
+                    <div class="view-all">
+                        <a href="#" id="viewAllActivity"><i class="fas fa-arrow-right"></i> View Full Activity History</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="dashboard-footer">
+            <span style="color: #8aa79a; font-size: 13px;">© FarmEZ 2026 — Digital Precision for Agricultural Labor</span>
+            <span style="color: #8aa79a; font-size: 13px;"><i class="fas fa-headset"></i> 1-800-AGRI-PRO</span>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Load user data from localStorage
+    const storedUser = localStorage.getItem('farmez_user');
+    let userName = 'Jameson Carter';
+    let userEmail = 'j.carter@evergreenvalley.com';
+    let userPhone = '+1 (555) 342-9012';
+    let userOrg = 'Evergreen Valley Farm';
+    let userLocation = 'Napa Valley, CA';
+    let memberSince = 'March 12, 2021';
+    
+    if (storedUser) {
+        const user = JSON.parse(storedUser);
+        userName = user.fullName || 'Jameson Carter';
+        userEmail = user.email || 'j.carter@evergreenvalley.com';
+        
+        // Extract first and last name for display
+        const nameParts = userName.split(' ');
+        const firstName = nameParts[0] || 'Jameson';
+        const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'Carter';
+        
+        // Update display name
+        document.getElementById('userName').textContent = `${firstName} ${lastName}`;
+        document.getElementById('fullName').textContent = `${firstName} ${lastName}-Sloan`;
+        document.getElementById('email').textContent = userEmail;
+        
+        // Update avatar initials
+        const userInitials = (firstName.charAt(0) + (lastName.charAt(0) || 'C')).toUpperCase();
+        document.getElementById('userAvatar').innerHTML = userInitials;
+        document.getElementById('profileAvatar').innerHTML = userInitials;
+        
+        // Update org details if available from registration
+        if (user.farmLocation) {
+            document.getElementById('location').textContent = user.farmLocation;
+            userLocation = user.farmLocation;
+        }
+    }
+
+    // Show toast notification
+    function showToast(message, icon = '🌾', isError = false) {
+        const toast = document.createElement('div');
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = isError ? '#d9534f' : '#1f7b3e';
+        toast.style.color = 'white';
+        toast.style.padding = '12px 24px';
+        toast.style.borderRadius = '60px';
+        toast.style.fontWeight = '500';
+        toast.style.zIndex = '1100';
+        toast.style.fontSize = '14px';
+        toast.innerHTML = `${icon} ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Edit Profile button
+    const editBtn = document.getElementById('editProfileBtn');
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            showToast('Edit profile feature coming soon!', '✏️');
+        });
+    }
+
+    // Export Profile button
+    const exportBtn = document.getElementById('exportBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            showToast('Exporting profile data...', '📄');
+            setTimeout(() => {
+                showToast('Profile exported successfully!', '✅');
+            }, 1000);
+        });
+    }
+
+    // Link Account button
+    const linkSupplyBtn = document.getElementById('linkSupplyBtn');
+    if (linkSupplyBtn) {
+        linkSupplyBtn.addEventListener('click', () => {
+            showToast('Connecting to SupplyLink ERP...', '🔗');
+            setTimeout(() => {
+                linkSupplyBtn.textContent = 'Connected';
+                linkSupplyBtn.style.background = '#e1f7e8';
+                linkSupplyBtn.style.color = '#1c6e3b';
+                linkSupplyBtn.style.border = 'none';
+                showToast('SupplyLink ERP connected successfully!', '✅');
+            }, 1500);
+        });
+    }
+
+    // View All Activity
+    const viewAllLink = document.getElementById('viewAllActivity');
+    if (viewAllLink) {
+        viewAllLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('Loading full activity history...', '📋');
+        });
+    }
+
+    // Notification bell
+    const bellIcon = document.getElementById('notificationBell');
+    if (bellIcon) {
+        bellIcon.addEventListener('click', () => {
+            showToast('No new notifications', '🔔');
+        });
+    }
+
+    // Contracts link (restricted)
+    const contractsLink = document.getElementById('contractsLink');
+    if (contractsLink) {
+        contractsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('Contracts will be available after verification', '🔒', true);
+        });
+    }
+
+    // Check login status
+    const isLoggedIn = localStorage.getItem('farmez_logged_in');
+    if (!isLoggedIn) {
+        window.location.href = 'Client_Login.html';
+    }
+</script>
+</body>
+</html>

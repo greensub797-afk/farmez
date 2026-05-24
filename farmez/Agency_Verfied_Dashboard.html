@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; connect-src 'self' http://localhost http://127.0.0.1; img-src 'self' data: https:; font-src 'self' data: https: https://fonts.gstatic.com;">
+    <title>FarmEZ | Agency Dashboard (Verified) – Reports</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            min-height: 100vh;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background: linear-gradient(180deg, #1a472a 0%, #0d2e1c 100%);
+            z-index: 100;
+            transition: all 0.4s ease;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.close {
+            width: 88px;
+        }
+
+        .sidebar .logo-details {
+            height: 70px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .sidebar .logo-details i {
+            font-size: 30px;
+            color: #c8e6b5;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .sidebar .logo-details .logo_name {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-left: 12px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            background: linear-gradient(135deg, #fff, #c8e6b5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar.close .logo-details .logo_name {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .sidebar .nav-links {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar .nav-links::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sidebar .nav-links li {
+            list-style: none;
+            margin: 4px 0;
+        }
+
+        .sidebar .nav-links li a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            padding: 14px 24px;
+            color: rgba(255, 255, 255, 0.85);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .sidebar .nav-links li a .icon {
+            min-width: 40px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .sidebar .nav-links li a .link_name {
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .sidebar.close .nav-links li a .link_name {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .sidebar .nav-links li.active a {
+            background: rgba(200, 230, 181, 0.15);
+            border-left: 3px solid #c8e6b5;
+            color: white;
+        }
+
+        .sidebar .bottom-content {
+            flex-shrink: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+            margin-top: auto;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .home-section {
+            position: relative;
+            background: #f5f7fb;
+            min-height: 100vh;
+            left: 280px;
+            width: calc(100% - 280px);
+            transition: all 0.4s ease;
+        }
+
+        .sidebar.close ~ .home-section {
+            left: 88px;
+            width: calc(100% - 88px);
+        }
+
+        /* Header */
+        .home-section .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 32px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid #e8f0e4;
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            color: #2c6e2f;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #2c6e2f, #1e8840);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 28px 32px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8f0e4;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8f0e4;
+        }
+
+        .card-header h2, .card-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f4b2b;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: #f4fbf6;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .metric-card h3 {
+            font-size: 0.85rem;
+            color: #6f9a7c;
+            margin-bottom: 8px;
+        }
+
+        .metric-card .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1b7b44;
+        }
+
+        .chart-container {
+            height: 280px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .data-table {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px 8px;
+            border-bottom: 1px solid #e8f0e4;
+        }
+        th {
+            font-weight: 600;
+            color: #0f4b2b;
+        }
+
+        .btn-sm {
+            background: none;
+            border: 1px solid #1b7b44;
+            padding: 6px 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .dashboard-footer {
+            margin-top: 32px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px solid #e2ede5;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f7b3e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            z-index: 1100;
+            animation: fadeInUp 0.3s ease;
+        }
+        .toast-notification.error {
+            background-color: #d9534f;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar close" id="sidebar">
+    <div class="logo-details">
+        <i class="fas fa-leaf"></i>
+        <span class="logo_name">FarmEZ</span>
+    </div>
+    <ul class="nav-links">
+        <li data-section="dashboard"><a href="#"><i class="fas fa-chart-line icon"></i><span class="link_name">Dashboard</span></a></li>
+        <li data-section="labor-requests"><a href="#"><i class="fas fa-tasks icon"></i><span class="link_name">Labor Requests</span></a></li>
+        <li data-section="worker-pool"><a href="#"><i class="fas fa-users icon"></i><span class="link_name">Worker Pool</span></a></li>
+        <li data-section="agencies"><a href="#"><i class="fas fa-building icon"></i><span class="link_name">Agencies</span></a></li>
+        <li data-section="user-management"><a href="#"><i class="fas fa-user-cog icon"></i><span class="link_name">User Management</span></a></li>
+        <li class="active" data-section="reports"><a href="#"><i class="fas fa-chart-bar icon"></i><span class="link_name">Reports & Analytics</span></a></li>
+        <li data-section="help"><a href="#"><i class="fas fa-question-circle icon"></i><span class="link_name">Help Center</span></a></li>
+    </ul>
+    <div class="bottom-content">
+        <ul class="nav-links">
+            <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt icon"></i><span class="link_name">Logout</span></a></li>
+        </ul>
+    </div>
+</div>
+
+<section class="home-section">
+    <div class="header">
+        <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
+        <div class="header-right">
+            <i class="fas fa-bell notification-icon" id="notificationBell"></i>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">AG</div>
+                <span class="user-name" id="userName">Agency</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-content" id="mainContent">
+        <!-- Reports & Analytics Section (exactly as screenshot) -->
+        <div id="reportsView">
+            <!-- Key Metrics Row -->
+            <div class="card">
+                <div class="card-header"><h2>Reports & Analytics</h2><span style="font-size:0.8rem; color:#6f9a7c;">Real-time performance monitoring and workforce distribution</span></div>
+                <div class="metrics-grid">
+                    <div class="metric-card"><h3>Average Total</h3><div class="value">14.2 Months</div></div>
+                    <div class="metric-card"><h3>Revenue Cost</h3><div class="value">$1,482</div></div>
+                    <div class="metric-card"><h3>Revenue Plan</h3><div class="value">88.4%</div></div>
+                    <div class="metric-card"><h3>Last 30 Days<br>Active Labor</h3><div class="value">0</div><span style="font-size:0.7rem;">Rejected: 0</span></div>
+                    <div class="metric-card"><h3>Targeted<br>Utilization</h3><div class="value">92.1%</div></div>
+                </div>
+            </div>
+
+            <!-- Platform Growth Chart -->
+            <div class="card">
+                <div class="card-header"><h3>Platform Growth</h3><span>Monitor additional trends in labor demand</span></div>
+                <div class="chart-container"><canvas id="growthChart"></canvas></div>
+                <div class="flex-between" style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.75rem; color: #6f9a7c;">
+                    <span>Y‑Axis: Labor Demand</span>
+                    <span>X‑Axis: Years (2018–2025)</span>
+                </div>
+            </div>
+
+            <!-- Geographic Distribution & Labor Distribution by Agency -->
+            <div class="card">
+                <div class="card-header"><h3>Geographic Distribution</h3></div>
+                <div class="metrics-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="metric-card"><h3>Central Valley</h3><div class="value">69%</div></div>
+                    <div class="metric-card"><h3>Northern Ridge</h3><div class="value">40%</div></div>
+                </div>
+                <div style="margin: 20px 0 10px;"><strong>Labor Distribution by Agency</strong><br>Performance audit of top 10 labor-intensive agencies</div>
+                <div class="data-table">
+                    <table>
+                        <thead><tr><th>ACTIVE WORKERS</th><th>COMPLIANCE SCORE</th></tr></thead>
+                        <tbody>
+                            <tr><td>1,400</td><td>98.2%</td></tr>
+                            <tr><td>890</td><td>52.0%</td></tr>
+                            <tr><td>540</td><td>64.5%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="action-buttons" style="margin-top: 20px;"><button class="btn-sm" id="viewAllAgenciesBtn">View All Agencies</button></div>
+            </div>
+        </div>
+
+        <!-- Other views (placeholder) -->
+        <div id="dashboardView" style="display:none;">Dashboard content here</div>
+        <div id="laborRequestsView" style="display:none;">Labor requests content</div>
+        <div id="workerPoolView" style="display:none;">Worker pool content</div>
+        <div id="agenciesView" style="display:none;">Agencies content</div>
+        <div id="userManagementView" style="display:none;">User management content</div>
+        <div id="helpView" style="display:none;">Help center content</div>
+
+        <div class="dashboard-footer">
+            <span>© FarmEZ 2026 — Digital Precision for Agricultural Labor</span>
+            <span><i class="fas fa-headset"></i> Agency Support: 1-800-AGRI-PRO</span>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    menuToggle.addEventListener('click', () => sidebar.classList.toggle('close'));
+
+    // Section switching (simplified – only reports shown here, but you can add others)
+    const sections = ['dashboard','labor-requests','worker-pool','agencies','user-management','reports','help'];
+    const navItems = document.querySelectorAll('.sidebar .nav-links > li[data-section]');
+    function showSection(section) {
+        sections.forEach(s => {
+            const el = document.getElementById(`${s}View`);
+            if (el) el.style.display = s === section ? 'block' : 'none';
+        });
+        navItems.forEach(li => {
+            if (li.getAttribute('data-section') === section) li.classList.add('active');
+            else li.classList.remove('active');
+        });
+    }
+    navItems.forEach(li => {
+        li.addEventListener('click', (e) => {
+            e.preventDefault();
+            const section = li.getAttribute('data-section');
+            if (section) showSection(section);
+        });
+    });
+    // Default: show reports
+    showSection('reports');
+
+    // Load agency name
+    const storedAgency = localStorage.getItem('farmez_agency');
+    let agencyName = 'Harvest Global Solutions';
+    if (storedAgency) {
+        const agency = JSON.parse(storedAgency);
+        agencyName = agency.agencyName || agencyName;
+    }
+    const initials = agencyName.split(' ').map(n=>n[0]).join('').toUpperCase();
+    document.getElementById('userAvatar').innerHTML = initials;
+    document.getElementById('userName').innerHTML = agencyName.split(' ')[0];
+
+    // Charts
+    const growthCtx = document.getElementById('growthChart')?.getContext('2d');
+    if (growthCtx) {
+        new Chart(growthCtx, {
+            type: 'line',
+            data: {
+                labels: ['2018','2019','2020','2021','2022','2023','2024','2025'],
+                datasets: [{ label: 'Labor Demand', data: [42,48,55,62,78,89,102,118], borderColor: '#1b7b44', backgroundColor: 'rgba(27,123,68,0.05)', fill: true, tension: 0.3 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // Toast and interactions
+    function showToast(msg, err=false) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification' + (err ? ' error' : '');
+        toast.innerHTML = err ? `<i class="fas fa-exclamation-circle"></i> ${msg}` : `<i class="fas fa-check-circle"></i> ${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    }
+    document.getElementById('viewAllAgenciesBtn')?.addEventListener('click', () => showToast('Viewing all agencies'));
+    document.getElementById('notificationBell')?.addEventListener('click', () => showToast('No new notifications'));
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        localStorage.removeItem('farmez_agency_logged_in');
+        localStorage.removeItem('farmez_agency');
+        showToast('Logged out! Redirecting...');
+        setTimeout(() => window.location.href = 'Agency_Login.html', 1500);
+    });
+    // Check login
+    if (!localStorage.getItem('farmez_agency_logged_in')) window.location.href = 'Agency_Login.html';
+</script>
+</body>
+</html>

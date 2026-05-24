@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; connect-src 'self' http://localhost http://127.0.0.1; img-src 'self' data: https:; font-src 'self' data: https: https://cdnjs.cloudflare.com;">
+    <title>FarmEZ | The Modern Ecosystem for Agricultural Labor</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* (your existing CSS – unchanged) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: #f5fbf2;
+            color: #1a2a3a;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 32px 48px 32px;
+        }
+
+        /* ========== HEADER ========== */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 12px 28px;
+            border-radius: 80px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(226, 239, 223, 0.6);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #2c6e2f, #1e8840);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: #e9f3e6;
+            color: #1f6e2f;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+
+        /* ========== VISION SECTION WITH PHOTO ========== */
+        .vision-section {
+            position: relative;
+            border-radius: 32px;
+            overflow: hidden;
+            margin-bottom: 48px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .vision-image {
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .vision-section:hover .vision-image {
+            transform: scale(1.02);
+        }
+
+        .vision-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.2), transparent);
+            padding: 48px 44px 32px;
+            color: white;
+            text-align: left;
+        }
+
+        .vision-overlay h1 {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .vision-overlay .highlight {
+            color: #b8e4c0;
+            border-bottom: 3px solid #b8e4c0;
+        }
+
+        .vision-overlay p {
+            font-size: 18px;
+            max-width: 680px;
+            opacity: 0.95;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ========== STAKEHOLDER CARDS ========== */
+        .stakeholder-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 64px;
+        }
+
+        .stakeholder-card {
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2ede5;
+            transition: transform 0.2s;
+        }
+
+        .stakeholder-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-header-img {
+            background: linear-gradient(135deg, #e8f5e5, #d4ecd0);
+            padding: 28px 32px 20px 32px;
+        }
+
+        .card-header-img h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1C3A2B;
+            margin-bottom: 8px;
+        }
+
+        .card-header-img p {
+            color: #4a6e5a;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .card-body {
+            padding: 28px 32px;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 28px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            font-size: 15px;
+            color: #2a4a38;
+        }
+
+        .feature-list li i.fa-check-circle {
+            color: #1f7b3e;
+            font-size: 18px;
+        }
+
+        .feature-list li i.fa-square {
+            color: #bdd9cf;
+            font-size: 18px;
+        }
+
+        .btn-outline-green {
+            background: transparent;
+            border: 2px solid #1f7b3e;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #1f7b3e;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline-green:hover {
+            background: #1f7b3e;
+            color: white;
+        }
+
+        .btn-solid-green {
+            background: #1f7b3e;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-solid-green:hover {
+            background: #0f6733;
+        }
+
+        /* ========== WORKFLOW SECTION ========== */
+        .workflow-section {
+            background: white;
+            border-radius: 32px;
+            padding: 48px 44px;
+            margin-bottom: 48px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2efdf;
+        }
+
+        .workflow-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: #1C3A2B;
+            margin-bottom: 12px;
+        }
+
+        .workflow-sub {
+            text-align: center;
+            font-size: 18px;
+            color: #5a7f6a;
+            margin-bottom: 48px;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .step-card {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: #e8f5e5;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: #1f7b3e;
+            margin: 0 auto 20px auto;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1C3A2B;
+            margin-bottom: 12px;
+        }
+
+        .step-desc {
+            font-size: 14px;
+            color: #5a7f6a;
+            line-height: 1.5;
+        }
+
+        /* ========== FOOTER ========== */
+        .portal-footer {
+            margin-top: 48px;
+            text-align: center;
+            padding: 24px 20px;
+            background: white;
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px solid #e2efdf;
+        }
+
+        .footer-tagline {
+            font-weight: 500;
+            color: #397654;
+        }
+
+        /* ========== MODAL ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .login-modal-container {
+            background: white;
+            max-width: 750px;
+            width: 90%;
+            border-radius: 48px;
+            padding: 40px 32px 48px;
+            text-align: center;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #8aa79a;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1c3a2a;
+            margin-bottom: 8px;
+        }
+
+        .modal-sub {
+            color: #5b7e6b;
+            margin-bottom: 32px;
+            font-size: 16px;
+        }
+
+        .role-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 32px;
+            margin: 20px 0 24px;
+        }
+
+        .role-option-card {
+            flex: 1;
+            min-width: 240px;
+            background: #fefefe;
+            border-radius: 32px;
+            padding: 32px 24px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid #e2ede5;
+            transition: all 0.25s ease;
+        }
+
+        .role-option-card.selected {
+            border: 2px solid #1f7b3e;
+            background: #f0faf2;
+        }
+
+        .role-icon-large {
+            font-size: 56px;
+            color: #2d7a48;
+            margin-bottom: 18px;
+        }
+
+        .role-name-large {
+            font-weight: 700;
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #1f3d2f;
+        }
+
+        .role-desc-large {
+            font-size: 13px;
+            color: #6b8c7a;
+            line-height: 1.4;
+        }
+
+        .confirm-login-btn {
+            background: #1f7b3e;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            min-width: 220px;
+            margin-top: 28px;
+            cursor: pointer;
+        }
+
+        .confirm-login-btn:disabled {
+            background: #bdd9cf;
+            cursor: not-allowed;
+        }
+
+        .role-feedback {
+            margin-top: 16px;
+            font-size: 13px;
+            color: #4c8165;
+            min-height: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard {
+                padding: 20px;
+            }
+
+            .stakeholder-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+
+            .vision-overlay h1 {
+                font-size: 32px;
+            }
+
+            .vision-image {
+                height: 360px;
+            }
+
+            .vision-overlay {
+                padding: 30px 28px 24px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+
+            .vision-image {
+                height: 280px;
+            }
+
+            .vision-overlay h1 {
+                font-size: 26px;
+            }
+
+            .vision-overlay p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="logo-area">
+                <div class="logo">Farm<span>EZ</span></div>
+            </div>
+            <div class="header-actions">
+            </div>
+        </div>
+
+        <!-- Vision Section with working photo from a free source -->
+        <div class="vision-section">
+            <img class="vision-image"
+                src="https://cdn.chinadialogue.net/content/uploads/2023/02/07163532/Rice-fields-in-Yunnan-Province-China_Madeleine-Jettre_Alamy_BP6P39.jpg"
+                alt="Farmers working in lush green rice paddy field"
+                onerror="this.src='https://cdn.pixabay.com/photo/2015/10/15/15/28/rice-989236_1280.jpg'">
+            <div class="vision-overlay">
+                <h1>The <span class="highlight">Modern Ecosystem</span></h1>
+                <p>FarmEZ bridges the gap between farms and professional labor agencies. Manage workforce logistics,
+                    compliance, and deployment through a single, unified portal.</p>
+            </div>
+        </div>
+
+        <!-- Stakeholder Cards -->
+        <div class="stakeholder-grid">
+            <!-- For Labor Agencies -->
+            <div class="stakeholder-card">
+                <div class="card-header-img">
+                    <h2>For Labor Agencies</h2>
+                    <p>Transform your agency operations from paper logs to digital dashboards. Track worker
+                        availability, manage multiple farm contracts, and automate compliance reporting in real-time.
+                    </p>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li><i class="far fa-square"></i> Real-time availability tracking</li>
+                        <li><i class="far fa-square"></i> Automated invoicing and payroll logs</li>
+                        <li><i class="far fa-square"></i> Digital compliance & safety vaults</li>
+                    </ul>
+                    <button class="btn-outline-green agency-register-btn"><i class="fas fa-building"></i> Register
+                        Agency</button>
+                </div>
+            </div>
+
+            <!-- For Farm Owners -->
+            <div class="stakeholder-card">
+                <div class="card-header-img">
+                    <h2>For Farm Owners</h2>
+                    <p>Never worry about labor shortages during peak harvest seasons. Browse certified agencies, post
+                        specific labor requests, and monitor crew productivity via a streamlined interface.</p>
+                </div>
+                <div class="card-body">
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> Vetted & certified agency network</li>
+                        <li><i class="fas fa-check-circle"></i> Detailed labor cost analytics</li>
+                        <li><i class="fas fa-check-circle"></i> Instant post-and-fill requests</li>
+                    </ul>
+                    <button class="btn-solid-green post-request-btn"><i class="fas fa-pen-alt"></i> Post a
+                        Request</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflow Section -->
+        <div class="workflow-section">
+            <div class="workflow-title">A Seamless Workflow</div>
+            <div class="workflow-sub">From request to harvest in four simple steps.</div>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Request</div>
+                    <div class="step-desc">Post your labor needs including location, crop type, and duration.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Match</div>
+                    <div class="step-desc">Verified agencies submit proposals to fulfill your labor requirements.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Deploy</div>
+                    <div class="step-desc">Approve a proposal and workers are dispatched to your location.</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Manage</div>
+                    <div class="step-desc">Monitor progress, sign off on hours, and process payments digitally.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="portal-footer">
+            <div class="footer-tagline">FarmEZ © 2026 — Digital Precision for Agricultural Labor</div>
+            <div class="footer-tagline"><i class="fas fa-leaf"></i> Empowering Every Stakeholder</div>
+        </div>
+    </div>
+
+    <!-- Modal: Role Selection -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="login-modal-container">
+            <span class="close-modal" id="closeModalBtn">&times;</span>
+            <div class="modal-title">Welcome to FarmEZ</div>
+            <div class="modal-sub">Select your role to continue</div>
+            <div class="role-grid" id="roleGrid">
+                <div class="role-option-card" data-role="client">
+                    <div class="role-icon-large"><i class="fas fa-tractor"></i></div>
+                    <div class="role-name-large">Farm Client</div>
+                    <div class="role-desc-large">Post labor requests, track deployments & access analytics.</div>
+                </div>
+                <div class="role-option-card" data-role="agency">
+                    <div class="role-icon-large"><i class="fas fa-handshake"></i></div>
+                    <div class="role-name-large">Labor Agency</div>
+                    <div class="role-desc-large">Manage worker pools, assignments & compliance.</div>
+                </div>
+            </div>
+            <button class="confirm-login-btn" id="confirmLoginBtn" disabled>Continue</button>
+            <div class="role-feedback" id="loginFeedback"></div>
+        </div>
+    </div>
+
+    <script>
+        // Modal logic
+        const modal = document.getElementById('loginModal');
+        const getStartedBtn = document.getElementById('getStartedBtn'); // not present, but safe
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const confirmBtn = document.getElementById('confirmLoginBtn');
+        const loginFeedback = document.getElementById('loginFeedback');
+        const roleCards = document.querySelectorAll('.role-option-card');
+        let selectedRoleValue = null;
+
+        function clearSelected() {
+            roleCards.forEach(card => card.classList.remove('selected'));
+        }
+
+        roleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const role = card.getAttribute('data-role');
+                clearSelected();
+                card.classList.add('selected');
+                selectedRoleValue = role;
+                confirmBtn.disabled = false;
+                loginFeedback.innerHTML = `<i class="fas fa-check-circle"></i> Selected: ${card.querySelector('.role-name-large')?.innerText}`;
+            });
+        });
+
+        function openLoginModal() {
+            clearSelected();
+            selectedRoleValue = null;
+            confirmBtn.disabled = true;
+            loginFeedback.innerHTML = '';
+            modal.classList.add('active');
+        }
+
+        // If you want to trigger the modal via some button, add a "Get Started" button and call openLoginModal()
+        // For now, you can open the modal from browser console if needed.
+
+        function closeModal() {
+            modal.classList.remove('active');
+            setTimeout(() => { if (!modal.classList.contains('active')) loginFeedback.innerHTML = ''; }, 200);
+        }
+
+        closeModalBtn?.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+        confirmBtn?.addEventListener('click', () => {
+            if (!selectedRoleValue) {
+                loginFeedback.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please select a role.';
+                return;
+            }
+            if (selectedRoleValue === 'client') {
+                loginFeedback.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Redirecting to client login...';
+                confirmBtn.disabled = true;
+                setTimeout(() => {
+                    window.location.href = 'Client_Login.html';
+                }, 600);
+            } else if (selectedRoleValue === 'agency') {
+                loginFeedback.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Redirecting to agency login...';
+                confirmBtn.disabled = true;
+                setTimeout(() => {
+                    window.location.href = 'Agency_Login.html';
+                }, 600);
+            }
+        });
+
+        // Button actions
+        const registerBtn = document.querySelector('.agency-register-btn');
+        const postRequestBtn = document.querySelector('.post-request-btn');
+        if (registerBtn) {
+            registerBtn.addEventListener('click', () => {
+                window.location.href = 'Agency_Registration.html';
+            });
+        }
+        if (postRequestBtn) {
+            postRequestBtn.addEventListener('click', () => {
+                window.location.href = 'Client_Registration.html';
+            });
+        }
+    </script>
+</body>
+
+</html>

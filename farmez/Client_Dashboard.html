@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; connect-src 'self' http://localhost http://127.0.0.1; img-src 'self' data: https:; font-src 'self' data: https: https://fonts.gstatic.com;">
+    <title>FarmEZ | Modern Dashboard</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            min-height: 100vh;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background: linear-gradient(180deg, #1a472a 0%, #0d2e1c 100%);
+            z-index: 100;
+            transition: all 0.4s ease;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .sidebar.close {
+            width: 88px;
+        }
+
+        .sidebar .logo-details {
+            height: 70px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .logo-details i {
+            font-size: 30px;
+            color: #c8e6b5;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .sidebar .logo-details .logo_name {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-left: 12px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            background: linear-gradient(135deg, #fff, #c8e6b5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar.close .logo-details .logo_name {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .sidebar .nav-links {
+            height: 100%;
+            padding: 24px 0 20px 0;
+            overflow: auto;
+        }
+
+        .sidebar .nav-links::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sidebar .nav-links li {
+            position: relative;
+            list-style: none;
+            transition: all 0.3s ease;
+            margin: 4px 0;
+        }
+
+        .sidebar .nav-links li:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar .nav-links li.active {
+            background: rgba(200, 230, 181, 0.15);
+            border-left: 3px solid #c8e6b5;
+        }
+
+        .sidebar .nav-links li a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            padding: 14px 24px;
+            color: rgba(255, 255, 255, 0.85);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sidebar .nav-links li a .icon {
+            min-width: 40px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .sidebar .nav-links li a .link_name {
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.close .nav-links li a .link_name {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Lock icon for restricted features */
+        .lock-badge {
+            margin-left: auto;
+            font-size: 10px;
+            color: #f5a623;
+            opacity: 0.8;
+        }
+
+        .sidebar.close .lock-badge {
+            display: none;
+        }
+
+        /* Active indicator */
+        .sidebar .nav-links li.active a {
+            color: white;
+        }
+
+        /* Bottom section */
+        .sidebar .bottom-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .home-section {
+            position: relative;
+            background: #f5f7fb;
+            min-height: 100vh;
+            left: 280px;
+            width: calc(100% - 280px);
+            transition: all 0.4s ease;
+        }
+
+        .sidebar.close~.home-section {
+            left: 88px;
+            width: calc(100% - 88px);
+        }
+
+        /* Header */
+        .home-section .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 32px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid #e8f0e4;
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            color: #2c6e2f;
+            transition: 0.2s;
+        }
+
+        .menu-toggle:hover {
+            opacity: 0.7;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+            color: #5a7f6a;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #2c6e2f, #1e8840);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a3a2a;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 28px 32px;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a472a, #0d2e1c);
+            border-radius: 24px;
+            padding: 32px 36px;
+            margin-bottom: 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-banner h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .welcome-banner p {
+            opacity: 0.85;
+            font-size: 14px;
+        }
+
+        .pending-badge-large {
+            background: #f5a62320;
+            border: 1px solid #f5a623;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #f5a623;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8f0e4;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: #e8f5e5;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon i {
+            font-size: 24px;
+            color: #1f7b3e;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1C3A2B;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #5a7f6a;
+        }
+
+        /* Two Column Section */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8f0e4;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8f0e4;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1C3A2B;
+        }
+
+        /* Progress Items */
+        .progress-item {
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #5a7f6a;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2ede5;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #1f7b3e;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        /* Steps */
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: #e8f5e5;
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #1f7b3e;
+        }
+
+        .step-content h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .step-content p {
+            font-size: 13px;
+            color: #6b8c7a;
+        }
+
+        /* Requests List */
+        .request-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f4f1;
+        }
+
+        .request-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .request-info p {
+            font-size: 12px;
+            color: #8aa79a;
+        }
+
+        .request-status {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: #eef2ef;
+            color: #367753;
+        }
+
+        .request-status.pending {
+            background: #fff0db;
+            color: #c97e2a;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            margin-top: 32px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px solid #e2ede5;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f7b3e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 500;
+            z-index: 1100;
+            font-size: 14px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .toast-notification.error {
+            background-color: #d9534f;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                left: -280px;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .home-section {
+                left: 0;
+                width: 100%;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-banner {
+                padding: 24px;
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar close" id="sidebar">
+        <div class="logo-details">
+            <i class="fas fa-leaf"></i>
+            <span class="logo_name">FarmEZ</span>
+        </div>
+        <ul class="nav-links">
+            <li class="active">
+                <a href="#" id="dashboardLink">
+                    <i class="fas fa-chart-line icon"></i>
+                    <span class="link_name">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="postLaborLink">
+                    <i class="fas fa-tasks icon"></i>
+                    <span class="link_name">Post Labor Request</span>
+                    <i class="fas fa-lock lock-badge"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="contractsLink">
+                    <i class="fas fa-file-contract icon"></i>
+                    <span class="link_name">Contracts</span>
+                    <i class="fas fa-lock lock-badge"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="profileLink">
+                    <i class="fas fa-user icon"></i>
+                    <span class="link_name">Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" id="helpLink">
+                    <i class="fas fa-question-circle icon"></i>
+                    <span class="link_name">Help Center</span>
+                </a>
+            </li>
+        </ul>
+        <div class="bottom-content">
+            <ul class="nav-links">
+                <li>
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt icon"></i>
+                        <span class="link_name">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <section class="home-section">
+        <div class="header">
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="header-right">
+                <i class="fas fa-bell notification-icon"></i>
+                <div class="user-info" id="userInfoBtn">
+                    <div class="user-avatar" id="userAvatar">JD</div>
+                    <span class="user-name" id="userName">John Doe</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div>
+                    <h2>Welcome back, <span id="welcomeName">Farmer</span>!</h2>
+                    <p>Your agricultural labor management platform</p>
+                </div>
+                <div class="pending-badge-large">
+                    <i class="fas fa-clock"></i> Pending Verification
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-value">2,384</div>
+                    <div class="stat-label">Active Workers Deployed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-building"></i></div>
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Partner Agencies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="stat-value">98.6%</div>
+                    <div class="stat-label">Compliance Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-tractor"></i></div>
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Active Farms</div>
+                </div>
+            </div>
+
+            <!-- Two Column Section -->
+            <div class="two-column">
+                <!-- Left Column -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Complete Your Profile</h3>
+                            <i class="fas fa-edit" style="color: #8aa79a; cursor: pointer;" id="editProfileIcon"></i>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span>Profile Completion</span>
+                                <span id="clientProfileCompletion">50%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="clientProfileBar" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span><i class="fas fa-building"></i> Business Registration</span>
+                                <span style="color: #1c6e3b;" id="clientBizReg">✓ Verified</span>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span><i class="fas fa-phone-alt"></i> Contact Information</span>
+                                <span style="color: #1c6e3b;" id="clientContact">✓ Completed</span>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span><i class="fas fa-file-invoice"></i> Tax Documentation</span>
+                                <span style="color: #d9534f;" id="clientTax">⚠ Action Required</span>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-label">
+                                <span><i class="fas fa-map-marked-alt"></i> Operational Site Details</span>
+                                <span style="color: #c97e2a;" id="clientSite">⏳ Missing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Active Requests</h3>
+                            <i class="fas fa-plus-circle" style="color: #1f7b3e; cursor: pointer;"
+                                id="addRequestIcon"></i>
+                        </div>
+                        <div class="request-item">
+                            <div class="request-info">
+                                <h4>Harvest Labor - Negros Occidental</h4>
+                                <p><i class="fas fa-calendar"></i> Requested: May 15, 2026</p>
+                            </div>
+                            <span class="request-status pending">Pending Review</span>
+                        </div>
+                        <div class="request-item">
+                            <div class="request-info">
+                                <h4>Irrigation Specialists</h4>
+                                <p><i class="fas fa-calendar"></i> Requested: May 10, 2026</p>
+                            </div>
+                            <span class="request-status pending">Under Review</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="dashboard-footer">
+                <span style="color: #8aa79a; font-size: 13px;">© FarmEZ 2026 — Digital Precision for Agricultural
+                    Labor</span>
+                <span style="color: #8aa79a; font-size: 13px;"><i class="fas fa-headset"></i> 1-800-AGRI-PRO</span>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ========== FIXED: Load user data correctly from registration ==========
+
+        // Try to get user data from multiple possible storage keys
+        let storedUser = localStorage.getItem('farmez_user');
+        let userName = 'Farm Client';
+        let userEmail = '';
+
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                userName = user.fullName || user.name || 'Farm Client';
+                userEmail = user.email || '';
+            } catch (e) {
+                console.log('Error parsing user data');
+            }
+        } else {
+            // Check for individual registration data
+            const regName = localStorage.getItem('farmez_user_name');
+            const regEmail = localStorage.getItem('farmez_user_email');
+            if (regName) userName = regName;
+            if (regEmail) userEmail = regEmail;
+        }
+
+        // Also check if user is logged in
+        const isLoggedIn = localStorage.getItem('farmez_logged_in');
+        if (!isLoggedIn && !storedUser) {
+            // If not logged in and no user data, redirect to login
+            window.location.href = 'Client_Login.html';
+        }
+
+        // Format user display name
+        let displayName = userName;
+        let firstName = userName.split(' ')[0];
+        let userInitials = '';
+
+        if (userName && userName !== 'Farm Client') {
+            const nameParts = userName.split(' ');
+            if (nameParts.length >= 2) {
+                userInitials = (nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
+            } else {
+                userInitials = userName.substring(0, 2).toUpperCase();
+            }
+        } else {
+            userInitials = 'FC';
+            firstName = 'Farmer';
+        }
+
+        // Update DOM elements
+        const userAvatar = document.getElementById('userAvatar');
+        const userNameSpan = document.getElementById('userName');
+        const welcomeNameSpan = document.getElementById('welcomeName');
+
+        if (userAvatar) userAvatar.innerHTML = userInitials;
+        if (userNameSpan) userNameSpan.innerHTML = firstName;
+        if (welcomeNameSpan) welcomeNameSpan.innerHTML = firstName;
+
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const menuToggle = document.getElementById('menuToggle');
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('close');
+                sidebar.classList.toggle('open');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message, icon = '🌾', isRestricted = false) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            if (isRestricted) toast.classList.add('error');
+            toast.innerHTML = `${icon} ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Navigate to User Profile page
+        function goToUserProfile() {
+            window.location.href = 'Client_UserProfile.html';
+        }
+
+        // Dashboard link
+        const dashboardLink = document.getElementById('dashboardLink');
+        if (dashboardLink) {
+            dashboardLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // Profile Link
+        const profileLink = document.getElementById('profileLink');
+        if (profileLink) {
+            profileLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                goToUserProfile();
+            });
+        }
+
+        // User info button
+        const userInfoBtn = document.getElementById('userInfoBtn');
+        if (userInfoBtn) {
+            userInfoBtn.addEventListener('click', () => {
+                goToUserProfile();
+            });
+        }
+
+        // Edit profile icon
+        const editProfileIcon = document.getElementById('editProfileIcon');
+        if (editProfileIcon) {
+            editProfileIcon.addEventListener('click', () => {
+                goToUserProfile();
+            });
+        }
+
+        // Make Profile functional dynamically
+        let isClientVerified = false;
+        let isClientApproved = false;
+        let isFirstLaborRequestDone = localStorage.getItem('farmez_client_first_labor_request_done') === 'true';
+        let clientId = null;
+
+        if (storedUser) {
+            try {
+                const userObj = JSON.parse(storedUser);
+                clientId = userObj.id;
+                isClientVerified = userObj.is_verified == 1;
+                isClientApproved = userObj.status === 'approved';
+            } catch (e) {}
+        }
+        
+        function updateClientProgressUI() {
+            let clientProgress = 50; // Business & Contact are done
+            
+            if (isClientApproved) {
+                clientProgress += 25;
+                document.getElementById('clientTax').style.color = '#1c6e3b';
+                document.getElementById('clientTax').innerText = '✓ Verified';
+                
+                const lockIcons = document.querySelectorAll('.sidebar .lock-badge');
+                lockIcons.forEach(icon => icon.remove());
+            } else if (isClientVerified) {
+                document.getElementById('clientTax').style.color = '#c97e2a';
+                document.getElementById('clientTax').innerText = '⏳ Reviewing';
+            }
+
+            if (isFirstLaborRequestDone && isClientApproved) {
+                clientProgress += 25;
+                document.getElementById('clientSite').style.color = '#1c6e3b';
+                document.getElementById('clientSite').innerText = '✓ Completed';
+            }
+
+            document.getElementById('clientProfileCompletion').innerText = clientProgress + '%';
+            document.getElementById('clientProfileBar').style.width = clientProgress + '%';
+        }
+
+        if (clientId) {
+            fetch('api/check_status.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: clientId, role: 'client' })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    isClientVerified = data.data.is_verified == 1;
+                    isClientApproved = data.data.status === 'approved';
+                    
+                    const userObj = JSON.parse(storedUser);
+                    userObj.is_verified = data.data.is_verified;
+                    userObj.status = data.data.status;
+                    localStorage.setItem('farmez_user', JSON.stringify(userObj));
+                    
+                    updateClientProgressUI();
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching client status:', err);
+                updateClientProgressUI();
+            });
+        } else {
+            updateClientProgressUI();
+        }
+
+        // Restricted features
+        const postLaborLink = document.getElementById('postLaborLink');
+        const contractsLink = document.getElementById('contractsLink');
+
+        if (postLaborLink) {
+            postLaborLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(!isClientApproved) {
+                    showToast('Post Labor Request will be available after verification', '🔒', true);
+                } else {
+                    showToast('Post Labor Request feature coming soon', '📝', false);
+                }
+            });
+        }
+
+        if (contractsLink) {
+            contractsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(!isClientApproved) {
+                    showToast('Contracts will be available after verification', '🔒', true);
+                } else {
+                    showToast('Contracts feature coming soon', '📄', false);
+                }
+            });
+        }
+
+        // Help Center
+        const helpLink = document.getElementById('helpLink');
+        if (helpLink) {
+            helpLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showToast('📞 Contact support: 1-800-AGRI-PRO | Email: support@farmez.com', '🆘', false);
+            });
+        }
+
+        // Logout
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('farmez_logged_in');
+                localStorage.removeItem('farmez_user');
+                localStorage.removeItem('farmez_password');
+                localStorage.removeItem('farmez_user_name');
+                localStorage.removeItem('farmez_user_email');
+                showToast('Logged out successfully! Redirecting...', '👋');
+                setTimeout(() => {
+                    window.location.href = 'Client_Login.html';
+                }, 1500);
+            });
+        }
+
+        // Plus icon handler
+        const addRequestIcon = document.getElementById('addRequestIcon');
+        if (addRequestIcon) {
+            addRequestIcon.addEventListener('click', () => {
+                if(!isClientApproved) {
+                    showToast('Post labor requests available after verification', '🔒', true);
+                } else {
+                    showToast('Post Labor Request feature coming soon', '📝', false);
+                }
+            });
+        }
+
+        // Notification bell
+        const bellIcon = document.querySelector('.notification-icon');
+        if (bellIcon) {
+            bellIcon.addEventListener('click', () => {
+                showToast('No new notifications. Your verification is in progress.', '🔔');
+            });
+        }
+    </script>
+</body>
+
+</html>

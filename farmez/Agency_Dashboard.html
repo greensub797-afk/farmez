@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; connect-src 'self' http://localhost http://127.0.0.1; img-src 'self' data: https:; font-src 'self' data: https: https://fonts.gstatic.com;">
+    <title>FarmEZ | Agency Dashboard</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            min-height: 100vh;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background: linear-gradient(180deg, #1a472a 0%, #0d2e1c 100%);
+            z-index: 100;
+            transition: all 0.4s ease;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.close {
+            width: 88px;
+        }
+
+        .sidebar .logo-details {
+            height: 70px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .sidebar .logo-details i {
+            font-size: 30px;
+            color: #c8e6b5;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .sidebar .logo-details .logo_name {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-left: 12px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            background: linear-gradient(135deg, #fff, #c8e6b5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar.close .logo-details .logo_name {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .sidebar .nav-links {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar .nav-links::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sidebar .nav-links li {
+            position: relative;
+            list-style: none;
+            transition: all 0.3s ease;
+            margin: 4px 0;
+        }
+
+        .sidebar .nav-links li:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar .nav-links li.active {
+            background: rgba(200, 230, 181, 0.15);
+            border-left: 3px solid #c8e6b5;
+        }
+
+        .sidebar .nav-links li a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            padding: 14px 24px;
+            color: rgba(255, 255, 255, 0.85);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sidebar .nav-links li a .icon {
+            min-width: 40px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .sidebar .nav-links li a .link_name {
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.close .nav-links li a .link_name {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Lock icon for restricted features */
+        .lock-badge {
+            margin-left: auto;
+            font-size: 10px;
+            color: #f5a623;
+            opacity: 0.8;
+        }
+
+        .sidebar.close .lock-badge {
+            display: none;
+        }
+
+        /* Active indicator */
+        .sidebar .nav-links li.active a {
+            color: white;
+        }
+
+        /* Bottom section for logout */
+        .sidebar .bottom-content {
+            flex-shrink: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+            margin-top: auto;
+        }
+
+        .sidebar .bottom-content .nav-links {
+            padding: 0;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .home-section {
+            position: relative;
+            background: #f5f7fb;
+            min-height: 100vh;
+            left: 280px;
+            width: calc(100% - 280px);
+            transition: all 0.4s ease;
+        }
+
+        .sidebar.close ~ .home-section {
+            left: 88px;
+            width: calc(100% - 88px);
+        }
+
+        /* Header */
+        .home-section .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 32px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid #e8f0e4;
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            color: #2c6e2f;
+            transition: 0.2s;
+        }
+
+        .menu-toggle:hover {
+            opacity: 0.7;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+            color: #5a7f6a;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #2c6e2f, #1e8840);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1a3a2a;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 28px 32px;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, #1a472a, #0d2e1c);
+            border-radius: 24px;
+            padding: 32px 36px;
+            margin-bottom: 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .welcome-banner h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .welcome-banner p {
+            opacity: 0.85;
+            font-size: 14px;
+        }
+
+        .pending-badge-large {
+            background: #f5a62320;
+            border: 1px solid #f5a623;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #f5a623;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8f0e4;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: #e8f5e5;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon i {
+            font-size: 24px;
+            color: #1f7b3e;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1C3A2B;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #5a7f6a;
+        }
+
+        /* Two Column Section */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8f0e4;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8f0e4;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1C3A2B;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-icon.done {
+            background: #e1f7e8;
+            color: #1c6e3b;
+        }
+
+        .step-icon.progress {
+            background: #fff0db;
+            color: #c97e2a;
+        }
+
+        .step-icon.waiting {
+            background: #eef2ef;
+            color: #8aa79a;
+        }
+
+        .step-content h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .step-content p {
+            font-size: 12px;
+            color: #8aa79a;
+        }
+
+        /* Verification Roadmap */
+        .roadmap-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f4f1;
+        }
+
+        .roadmap-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8f5e5;
+            color: #1f7b3e;
+        }
+
+        .roadmap-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .roadmap-content p {
+            font-size: 12px;
+            color: #8aa79a;
+        }
+
+        .roadmap-status {
+            margin-left: auto;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .roadmap-status.complete {
+            color: #1c6e3b;
+        }
+
+        .roadmap-status.pending {
+            color: #c97e2a;
+        }
+
+        .roadmap-status.locked {
+            color: #8aa79a;
+        }
+
+        /* Button */
+        .btn-primary {
+            background: #1f7b3e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: #0f6733;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #1f7b3e;
+            padding: 10px 22px;
+            border-radius: 40px;
+            color: #1f7b3e;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline:hover {
+            background: #e8f5e5;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            margin-bottom: 24px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #5a7f6a;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e2ede5;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 75%;
+            height: 100%;
+            background: #1f7b3e;
+            border-radius: 10px;
+        }
+
+        /* Action Buttons Row */
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            margin-top: 32px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            border: 1px solid #e2ede5;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1f7b3e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 500;
+            z-index: 1100;
+            font-size: 14px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .toast-notification.error {
+            background-color: #d9534f;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                left: -280px;
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .home-section {
+                left: 0;
+                width: 100%;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .welcome-banner {
+                padding: 24px;
+            }
+            .dashboard-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar close" id="sidebar">
+    <div class="logo-details">
+        <i class="fas fa-leaf"></i>
+        <span class="logo_name">FarmEZ</span>
+    </div>
+    <ul class="nav-links">
+        <li class="active">
+            <a href="#" id="dashboardLink">
+                <i class="fas fa-chart-line icon"></i>
+                <span class="link_name">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="laborRequestsLink">
+                <i class="fas fa-tasks icon"></i>
+                <span class="link_name">Labor Requests</span>
+                <i class="fas fa-lock lock-badge"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="workerPoolLink">
+                <i class="fas fa-users icon"></i>
+                <span class="link_name">Worker Pool</span>
+                <i class="fas fa-lock lock-badge"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="agenciesLink">
+                <i class="fas fa-building icon"></i>
+                <span class="link_name">Agencies</span>
+                <i class="fas fa-lock lock-badge"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="userManagementLink">
+                <i class="fas fa-user-cog icon"></i>
+                <span class="link_name">User Management</span>
+                <i class="fas fa-lock lock-badge"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="reportsLink">
+                <i class="fas fa-chart-bar icon"></i>
+                <span class="link_name">Reports</span>
+                <i class="fas fa-lock lock-badge"></i>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="helpLink">
+                <i class="fas fa-question-circle icon"></i>
+                <span class="link_name">Help Center</span>
+            </a>
+        </li>
+    </ul>
+    <div class="bottom-content">
+        <ul class="nav-links">
+            <li>
+                <a href="#" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt icon"></i>
+                    <span class="link_name">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="home-section">
+    <div class="header">
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="header-right">
+            <i class="fas fa-bell notification-icon" id="notificationBell"></i>
+            <div class="user-info" id="userInfoBtn">
+                <div class="user-avatar" id="userAvatar">AG</div>
+                <span class="user-name" id="userName">Agency</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-content">
+        <!-- Dashboard View -->
+        <div id="dashboardView">
+            <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <div>
+                <h2>Welcome back, <span id="welcomeName">Agency</span>!</h2>
+                <p>Your agricultural labor management platform</p>
+            </div>
+            <div class="pending-badge-large">
+                <i class="fas fa-clock"></i> Pending Verification
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-value">1,247</div>
+                <div class="stat-label">Workers Available</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-building"></i></div>
+                <div class="stat-value">23</div>
+                <div class="stat-label">Active Contracts</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div class="stat-value">94.2%</div>
+                <div class="stat-label">Compliance Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-tractor"></i></div>
+                <div class="stat-value">156</div>
+                <div class="stat-label">Partner Farms</div>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="two-column">
+            <!-- Left Column -->
+            <div>
+                <!-- Onboarding Progress Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Onboarding Progress</h3>
+                        <i class="fas fa-chart-simple" style="color: #8aa79a;"></i>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Verification Progress</span>
+                            <span id="verificationProgressText">25% Complete</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" id="verificationProgressBar" style="width: 25%"></div></div>
+                    </div>
+                    <div class="progress-steps" id="onboardingSteps">
+                        <div class="step-item">
+                            <div class="step-icon done" id="iconStep1"><i class="fas fa-check"></i></div>
+                            <div class="step-content">
+                                <h4>Agency Profile</h4>
+                                <p>Basic information submitted</p>
+                            </div>
+                            <span style="margin-left: auto; color: #1c6e3b; font-size: 12px;" id="statusStep1">Done</span>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-icon done" id="iconStep2"><i class="fas fa-check"></i></div>
+                            <div class="step-content">
+                                <h4>Document Upload</h4>
+                                <p>ID and clearance submitted</p>
+                            </div>
+                            <span style="margin-left: auto; color: #1c6e3b; font-size: 12px;" id="statusStep2">Done</span>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-icon waiting" id="iconStep3"><i class="fas fa-lock"></i></div>
+                            <div class="step-content">
+                                <h4>Compliance Review</h4>
+                                <p>Awaiting compliance approval</p>
+                            </div>
+                            <span style="margin-left: auto; color: #8aa79a; font-size: 12px;" id="statusStep3">Waiting</span>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-icon waiting" id="iconStep4"><i class="fas fa-lock"></i></div>
+                            <div class="step-content">
+                                <h4>First Labor Request</h4>
+                                <p>Mark first labor request as done</p>
+                            </div>
+                            <span style="margin-left: auto; color: #8aa79a; font-size: 12px;" id="statusStep4">Waiting</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verification Roadmap Card -->
+                <div class="card" style="margin-top: 28px;">
+                    <div class="card-header">
+                        <h3>Verification Roadmap</h3>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="roadmap-content">
+                            <h4>Document Submission</h4>
+                            <p>Regulatory certifications and insurance records verified.</p>
+                        </div>
+                        <span class="roadmap-status complete"><i class="fas fa-check-circle"></i> Verified</span>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="roadmap-content">
+                            <h4>Compliance Review</h4>
+                            <p>Our compliance officers are reviewing your operational geography and labor policies.</p>
+                        </div>
+                        <span class="roadmap-status pending">⏳ 24-48 hours remaining</span>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-icon"><i class="fas fa-unlock-alt"></i></div>
+                        <div class="roadmap-content">
+                            <h4>Full Agency Access</h4>
+                            <p>Activation of worker dispatching, automated payroll, and marketplace bidding.</p>
+                        </div>
+                        <span class="roadmap-status locked"><i class="fas fa-lock"></i> Locked</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <!-- Removed right column cards as requested -->
+            </div>
+        </div> <!-- End dashboardView -->
+
+        <!-- Labor Requests View -->
+        <div id="laborRequestsView" style="display: none;">
+            <div class="welcome-banner" style="background: linear-gradient(135deg, #1f7b3e, #145c2c);">
+                <div>
+                    <h2>Labor Requests Marketplace</h2>
+                    <p>Manage incoming requests from clients and propose your labor teams</p>
+                </div>
+                <button class="btn-primary" style="background: white; color: #1f7b3e; border: none; font-weight: 700; border-radius: 40px; padding: 12px 24px; cursor: pointer;" id="postRequestBtn">
+                    <i class="fas fa-bullhorn"></i> Post Labor Offer
+                </button>
+            </div>
+
+            <!-- List of incoming requests -->
+            <div class="card" style="margin-top: 28px;">
+                <div class="card-header">
+                    <h3>Incoming Client Requests</h3>
+                </div>
+                
+                <div class="request-item" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2ede5; padding: 16px 0;">
+                    <div>
+                        <h4 style="color: #0f4b2b; margin-bottom: 6px;">Green Valley Farms</h4>
+                        <p style="font-size: 13px; color: #5a7f6a;"><i class="fas fa-users"></i> 50 Harvesters Needed • <i class="fas fa-map-marker-alt"></i> Salinas Valley</p>
+                        <p style="font-size: 13px; color: #5a7f6a; margin-top: 4px;"><i class="fas fa-clock"></i> Requested: May 24, 2026</p>
+                    </div>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <span class="verification-badge" style="display: none; color: #1c6e3b; font-size: 13px; font-weight: 600;"><i class="fas fa-check-circle"></i> Client Verified</span>
+                        <button class="btn-outline verify-client-btn" style="border-radius: 8px; font-size: 13px; padding: 8px 16px; border: 1px solid #1f7b3e; color: #1f7b3e; cursor: pointer; background: transparent;">
+                            <i class="fas fa-shield-alt"></i> Verify Client
+                        </button>
+                        <button class="btn-primary accept-request-btn" style="border-radius: 8px; font-size: 13px; padding: 8px 16px; opacity: 0.5; cursor: not-allowed; background: #1f7b3e; color: white; border: none;" disabled>
+                            <i class="fas fa-check"></i> Accept Request
+                        </button>
+                    </div>
+                </div>
+
+                <div class="request-item" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+                    <div>
+                        <h4 style="color: #0f4b2b; margin-bottom: 6px;">Sunrise Vineyards</h4>
+                        <p style="font-size: 13px; color: #5a7f6a;"><i class="fas fa-users"></i> 20 Pruners Needed • <i class="fas fa-map-marker-alt"></i> Napa Valley</p>
+                        <p style="font-size: 13px; color: #5a7f6a; margin-top: 4px;"><i class="fas fa-clock"></i> Requested: May 22, 2026</p>
+                    </div>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <span class="verification-badge" style="display: none; color: #1c6e3b; font-size: 13px; font-weight: 600;"><i class="fas fa-check-circle"></i> Client Verified</span>
+                        <button class="btn-outline verify-client-btn" style="border-radius: 8px; font-size: 13px; padding: 8px 16px; border: 1px solid #1f7b3e; color: #1f7b3e; cursor: pointer; background: transparent;">
+                            <i class="fas fa-shield-alt"></i> Verify Client
+                        </button>
+                        <button class="btn-primary accept-request-btn" style="border-radius: 8px; font-size: 13px; padding: 8px 16px; opacity: 0.5; cursor: not-allowed; background: #1f7b3e; color: white; border: none;" disabled>
+                            <i class="fas fa-check"></i> Accept Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="dashboard-footer">
+            <span style="color: #8aa79a; font-size: 13px;">© FarmEZ 2026 — Digital Precision for Agricultural Labor</span>
+            <span style="color: #8aa79a; font-size: 13px;"><i class="fas fa-headset"></i> Agency Support: 1-800-AGRI-PRO</span>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Sidebar Toggle
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('close');
+        sidebar.classList.toggle('open');
+    });
+
+    // Load agency data from localStorage
+    const storedAgency = localStorage.getItem('farmez_agency');
+    let agencyName = 'Harvest Global Solutions';
+    let agencyEmail = 'admin@harvestglobal.com';
+    
+    if (storedAgency) {
+        const agency = JSON.parse(storedAgency);
+        agencyName = agency.agencyName || 'Harvest Global Solutions';
+        agencyEmail = agency.email || 'admin@harvestglobal.com';
+    }
+    
+    // Update display
+    document.getElementById('agencyNameDisplay').innerText = agencyName;
+    document.getElementById('emailDisplay').innerText = agencyEmail;
+    
+    // Update avatar initials and welcome name
+    const userAvatar = document.getElementById('userAvatar');
+    const userNameSpan = document.getElementById('userName');
+    const welcomeNameSpan = document.getElementById('welcomeName');
+    
+    if (userAvatar && agencyName) {
+        const initials = agencyName.split(' ').map(n => n[0]).join('').toUpperCase();
+        userAvatar.innerHTML = initials;
+        const firstName = agencyName.split(' ')[0];
+        if (userNameSpan) userNameSpan.innerHTML = firstName;
+        if (welcomeNameSpan) welcomeNameSpan.innerHTML = firstName;
+    }
+    
+    // Show toast notification
+    function showToast(message, isError = false) {
+        const existingToast = document.querySelector('.toast-notification');
+        if (existingToast) existingToast.remove();
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        if (isError) toast.classList.add('error');
+        toast.innerHTML = isError ? `<i class="fas fa-exclamation-circle"></i> ${message}` : `<i class="fas fa-check-circle"></i> ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    }
+    
+
+    // Restricted features - all show coming soon message
+    const laborRequestsLink = document.getElementById('laborRequestsLink');
+    const workerPoolLink = document.getElementById('workerPoolLink');
+    const agenciesLink = document.getElementById('agenciesLink');
+    const userManagementLink = document.getElementById('userManagementLink');
+    const reportsLink = document.getElementById('reportsLink');
+    const helpLink = document.getElementById('helpLink');
+
+    // Make Onboarding Progress functional dynamically
+    let isVerified = false;
+    let isApproved = false;
+    let isFirstLaborRequestDone = localStorage.getItem('farmez_agency_first_labor_request_done') === 'true';
+    let agencyId = null;
+
+    if (storedAgency) {
+        const agency = JSON.parse(storedAgency);
+        agencyId = agency.id;
+        // initial values from storage
+        isVerified = agency.is_verified == 1;
+        isApproved = agency.status === 'approved';
+    }
+
+    function updateProgressUI() {
+        let progressPercentage = 50; // default (Agency Profile & Document Upload done)
+        if (isApproved) {
+            progressPercentage = 75; // Compliance Review done
+            document.getElementById('iconStep3').className = 'step-icon done';
+            document.getElementById('iconStep3').innerHTML = '<i class="fas fa-check"></i>';
+            document.getElementById('statusStep3').style.color = '#1c6e3b';
+            document.getElementById('statusStep3').innerText = 'Done';
+            
+            // Remove locks from sidebar if verified
+            const lockIcons = document.querySelectorAll('.sidebar .lock-badge');
+            lockIcons.forEach(icon => icon.remove());
+        } else if (isVerified) {
+            document.getElementById('iconStep3').className = 'step-icon progress';
+            document.getElementById('iconStep3').innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+            document.getElementById('statusStep3').style.color = '#c97e2a';
+            document.getElementById('statusStep3').innerText = 'In Progress';
+        }
+        
+        if (isFirstLaborRequestDone && isApproved) {
+            progressPercentage = 100;
+            document.getElementById('iconStep4').className = 'step-icon done';
+            document.getElementById('iconStep4').innerHTML = '<i class="fas fa-check"></i>';
+            document.getElementById('statusStep4').style.color = '#1c6e3b';
+            document.getElementById('statusStep4').innerText = 'Done';
+        } else if (isApproved) {
+            document.getElementById('iconStep4').className = 'step-icon progress';
+            document.getElementById('iconStep4').innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+            document.getElementById('statusStep4').style.color = '#c97e2a';
+            document.getElementById('statusStep4').innerText = 'Action Required';
+        }
+
+        document.getElementById('verificationProgressText').innerText = progressPercentage + '% Complete';
+        document.getElementById('verificationProgressBar').style.width = progressPercentage + '%';
+    }
+
+    // Call API to get latest status
+    if (agencyId) {
+        fetch('api/check_status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: agencyId, role: 'agency' })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                isVerified = data.data.is_verified == 1;
+                isApproved = data.data.status === 'approved';
+                
+                // Update local storage so other pages have latest
+                const agency = JSON.parse(storedAgency);
+                agency.is_verified = data.data.is_verified;
+                agency.status = data.data.status;
+                localStorage.setItem('farmez_agency', JSON.stringify(agency));
+
+                updateProgressUI();
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching status:', err);
+            updateProgressUI(); // fallback to local storage
+        });
+    } else {
+        updateProgressUI();
+    }
+    
+    
+    // View switching function
+    function showView(viewId) {
+        document.getElementById('dashboardView').style.display = 'none';
+        document.getElementById('laborRequestsView').style.display = 'none';
+        document.getElementById(viewId).style.display = 'block';
+        
+        // Update active class in sidebar
+        document.querySelectorAll('.sidebar .nav-links li').forEach(li => li.classList.remove('active'));
+        if (viewId === 'dashboardView') {
+            document.getElementById('dashboardLink').parentElement.classList.add('active');
+        } else if (viewId === 'laborRequestsView') {
+            document.getElementById('laborRequestsLink').parentElement.classList.add('active');
+        }
+    }
+
+    // Dashboard link (active)
+    document.getElementById('dashboardLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        showView('dashboardView');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    if (laborRequestsLink) {
+        laborRequestsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(!isApproved) {
+                showToast('Labor Requests will be available after verification completes.', true);
+            } else {
+                showView('laborRequestsView');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
+    // Handle Verify Client and Accept Request
+    document.querySelectorAll('.verify-client-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const container = this.parentElement;
+            this.style.display = 'none';
+            container.querySelector('.verification-badge').style.display = 'inline-block';
+            
+            const acceptBtn = container.querySelector('.accept-request-btn');
+            acceptBtn.disabled = false;
+            acceptBtn.style.opacity = '1';
+            acceptBtn.style.cursor = 'pointer';
+            
+            showToast('Client verified successfully. You can now accept the request.');
+        });
+    });
+
+    document.querySelectorAll('.accept-request-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (!this.disabled) {
+                showToast('Request accepted! The client will be notified.');
+                this.innerHTML = '<i class="fas fa-check-double"></i> Accepted';
+                this.disabled = true;
+                this.style.opacity = '0.7';
+                
+                // Mark first labor request as done to progress onboarding
+                if (!localStorage.getItem('farmez_agency_first_labor_request_done')) {
+                    localStorage.setItem('farmez_agency_first_labor_request_done', 'true');
+                    isFirstLaborRequestDone = true;
+                    updateProgressUI();
+                }
+            }
+        });
+    });
+
+    document.getElementById('postRequestBtn')?.addEventListener('click', () => {
+        showToast('Form to post an offer is opening...');
+    });
+    
+    if (workerPoolLink) {
+        workerPoolLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(!isApproved) {
+                showToast('Worker Pool will be available after verification completes.', true);
+            } else {
+                showToast('Worker Pool feature coming soon', false);
+            }
+        });
+    }
+    
+    if (agenciesLink) {
+        agenciesLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(!isApproved) {
+                showToast('Agencies management will be available after verification completes.', true);
+            } else {
+                showToast('Agencies feature coming soon', false);
+            }
+        });
+    }
+    
+    if (userManagementLink) {
+        userManagementLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(!isApproved) {
+                showToast('User Management will be available after verification completes.', true);
+            } else {
+                showToast('User Management feature coming soon', false);
+            }
+        });
+    }
+    
+    if (reportsLink) {
+        reportsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(!isApproved) {
+                showToast('Reports will be available after verification completes.', true);
+            } else {
+                showToast('Reports feature coming soon', false);
+            }
+        });
+    }
+    
+    if (helpLink) {
+        helpLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('📞 Contact support: 1-800-AGRI-PRO | Email: agency@farmez.com', false);
+        });
+    }
+    
+    // Edit profile icon
+    const editProfileIcon = document.getElementById('editProfileIcon');
+    if (editProfileIcon) {
+        editProfileIcon.addEventListener('click', () => {
+            showToast('Edit profile feature coming soon', false);
+        });
+    }
+    
+    // Notification bell
+    const notificationBell = document.getElementById('notificationBell');
+    if (notificationBell) {
+        notificationBell.addEventListener('click', () => {
+            showToast('No new notifications. Your verification is in progress.', false);
+        });
+    }
+    
+    // User info click
+    const userInfoBtn = document.getElementById('userInfoBtn');
+    if (userInfoBtn) {
+        userInfoBtn.addEventListener('click', () => {
+            showToast('Agency profile page coming soon', false);
+        });
+    }
+    
+    // Logout button
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('farmez_agency_logged_in');
+            localStorage.removeItem('farmez_agency');
+            localStorage.removeItem('farmez_current_agency');
+            showToast('Logged out successfully! Redirecting...', false);
+            setTimeout(() => {
+                window.location.href = 'Agency_Login.html';
+            }, 1500);
+        });
+    }
+    
+    // Check login status
+    const isLoggedIn = localStorage.getItem('farmez_agency_logged_in');
+    if (!isLoggedIn) {
+        window.location.href = 'Agency_Login.html';
+    }
+</script>
+</body>
+</html>
